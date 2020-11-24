@@ -5,12 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"start": "node index.js"
+    "start": "node index.js",
+	"lint": "eslint .",
+	"lint:fix": "eslint . --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "pico-common": "^0.14.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.14.0"
   }
 }

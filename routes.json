@@ -1,6 +1,9 @@
 {
-	"mod": {
-	},
+	"mod": [
+		"web",
+		"timer",
+		"util"
+	],
 	"spec": {
 		"query": {
 			"type": "object",
@@ -17,7 +20,7 @@
 					"type": "array",
 					"sep": "~",
 					"spec": {
-						"type: "object",
+						"type": "object",
 						"spec": {
 							"include": {
 								"type": "array",

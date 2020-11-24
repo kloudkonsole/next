@@ -3,11 +3,11 @@ const url = require('url')
 const pObj = require('pico-common').export('pico/obj')
 
 const FILTER = [['index', 'csv'], ['range', 'start', 'end']]
-const HAS_DATA = obj => obj && (Array.isArray(data) || Object.keys(body).length)
+const HAS_DATA = obj => obj && (Array.isArray(obj) || Object.keys(obj).length)
 const CREATE_BODY = (body, meta) => Object.assign({}, meta, {body})
 
 function pushFilter(input, filter, i, output){
-	for (let keys; keys = filter[i]; i++){
+	for (let keys; (keys = filter[i]); i++){
 		const val0 = input[keys[0]]
 		if (!val0) continue
 		if (Array.isArray(val0)){
@@ -26,35 +26,16 @@ function pushFilter(input, filter, i, output){
 	}
 }
 
-function pushFilter(input, keys, output){
-	const val0 = input[keys[0]]
-	if (!val0) return
-	if (Array.isArray(val0)){
-		for (let i = 0, l = val0.length; i < l; i++){
-			output.push(keys.reduce((acc, key) => {
-				acc[key] = input[key][i]
-				return acc
-			}, {}))
-		}
-	}else{
-		output.push(keys.reduce((acc, key) => {
-			acc[key] = input[key]
-			return acc
-		}, {}))
-	}
-}
-
 module.exports = {
 
 	setup: function(){
-		const proxy = http.createServer(router(routes))
+		const proxy = http.createServer(routers(routes))
 
 		proxy.listen(1337, '127.0.0.1', () => { })
 	},
 
 	log: async function (res){
 		try {
-		const s = Date.now()
 			await this.next()
 		}catch(exp){
 			console.error(exp)
@@ -87,12 +68,13 @@ module.exports = {
 			} else {
 				res.writeHead(204)
 				res.end()
-			} 
+			}
 			return this.next()
+		}
 	},
 
 	input: function(spec, src = 'body', filter = FILTER){
-		return function(res, output, ext) {
+		return function(req, output, ext) {
 			let obj
 			switch(src){
 			case 'body':
