@@ -1,6 +1,5 @@
 const pStr = require('pico-common').export('pico/str')
-const radix = new pStr.Radix
-const routes = require('./routes')
+const service = require('./service.json')
 
 async function next(err, named, data = this.data){
 	if (err) throw err
@@ -36,7 +35,19 @@ async function next(err, named, data = this.data){
 	await middleware[0].apply(this, args)
 }
 
-routes.mod(path => {
-	const mod = require('./mod/' + path)
-	mod.setup()
-})
+function Host(service){
+	const radix = new pStr.Radix
+	const paths = Object.keys(service.routes)
+	paths.forEach(key => radix.add(key))
+
+	service.mod.forEach(cfg => {
+		const mod = require('./mod/' + cfg.id)
+		mod.setup(this, cfg, path)
+	})
+}
+
+Host.prototye = {
+	go(url,data){
+		return next(null, url, data)
+	}
+}

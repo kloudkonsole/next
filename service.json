@@ -1,9 +1,13 @@
 {
-	"mod": [
-		"web",
-		"timer",
-		"util"
-	],
+	"mod": [{
+		"id": "web",
+		"host": "127.0.0.1",
+		"port": 1337
+	},{
+		"id": "timer"
+	},{
+		"id": "util"
+	}],
 	"spec": {
 		"query": {
 			"type": "object",
@@ -100,7 +104,7 @@
 				"": {
 					"type": "string",
 					"value": ["ref", ["_", "params", "index"]]
-				},
+				}
 			}
 		}
 	},

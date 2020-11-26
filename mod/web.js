@@ -28,10 +28,16 @@ function pushFilter(input, filter, i, output){
 
 module.exports = {
 
-	setup: function(){
-		const proxy = http.createServer(routers(routes))
+	setup: function(host, cfg, paths){
+		const proxy = http.createServer((req, res) => {
+			const err = host.go(req.url, {req, res})
+			if (err.charAt) {
+				res.statusCode = 404
+				return res.end(err)
+			}
+		})
 
-		proxy.listen(1337, '127.0.0.1', () => { })
+		proxy.listen(cfg.port, cfg.host, () => { })
 	},
 
 	log: async function (res){
