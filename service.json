@@ -27,8 +27,7 @@
 						"type": "object",
 						"spec": {
 							"include": {
-								"type": "array",
-								"
+								"type": "array"
 							},
 							"range": "string",
 							"start": {
@@ -59,7 +58,7 @@
 				},
 				"body": {
 					"type": "boject",
-					"value": ["ref", ["$"]]]
+					"value": ["ref", ["$"]]
 				},
 				"page": {
 					"type": "number",
@@ -115,7 +114,7 @@
 		"/1.0/health": [
 			[["web.log"], "res"],
 			[["util.wait"], 5],
-			[["util.output", {"type: "object", "spec": {}}], "res", "ok"]
+			[["util.output", {"type": "object", "spec": {}}], "res", "ok"]
 		],
 		"/1.0/user/:id": [
 			[["web.log"], "res"],
