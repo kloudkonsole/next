@@ -9,16 +9,18 @@
 		"id": "util"
 	}],
 	"spec": {
+		"params": {
+			"type": "object",
+			"spec": {
+				"id": "string"
+			}
+		},
 		"query": {
 			"type": "object",
 			"spec": {
 				"page": "number",
 				"size": "number",
 				"sort": "string",
-				"order": {
-					"type": ["asc", "desc"],
-					"required": ["bool", ["sort"]]
-				},
 				"q": "string",
 				"filter": {
 					"type": "array",
@@ -48,78 +50,22 @@
 					}
 				}
 			}
-		},
-		"output": {
-			"type": "object",
-			"spec": {
-				"code": {
-					"type": "number",
-					"value": 0
-				},
-				"body": {
-					"type": "boject",
-					"value": ["ref", ["$"]]
-				},
-				"page": {
-					"type": "number",
-					"value": ["ref", ["_", "params", "page"]]
-				},
-				"size": {
-					"type": "number",
-					"value": ["ref", ["_", "params", "size"]]
-				},
-				"total": {
-					"type": "number",
-					"value": ["ref", ["_", "params", "total"]]
-				},
-				"sort": {
-					"type": "string",
-					"value": ["ref", ["_", "params", "sort"]]
-				},
-				"order": {
-					"type": ["asc", "desc"],
-					"value": ["ref", ["_", "params", "order"]]
-				},
-				"range": {
-					"type": "string",
-					"value": ["ref", ["_", "params", "range"]]
-				},
-				"start": {
-					"type": "null",
-					"value": ["ref", ["_", "params", "start"]]
-				},
-				"end": {
-					"type": "null",
-					"value": ["ref", ["_", "params", "end"]]
-				},
-				"q": {
-					"type": "string",
-					"value": ["ref", ["_", "params", "q"]]
-				},
-				"index": {
-					"type": "string",
-					"value": ["ref", ["_", "params", "index"]]
-				},
-				"": {
-					"type": "string",
-					"value": ["ref", ["_", "params", "index"]]
-				}
-			}
 		}
 	},
 	"routes": {
 		"* * * * * *": [
-			[["utll.log", "#hello"]]
+			["util.log", "#hello"]
 		],
 		"/1.0/health": [
-			[["web.log"], "res"],
-			[["util.wait"], 5],
-			[["util.output", {"type": "object", "spec": {}}], "res", "ok"]
+			["web.log", "res"],
+			["util.wait", 5],
+			[["web.output", "json"], "$output"]
 		],
 		"/1.0/user/:id": [
-			[["web.log"], "res"],
-			[["web.input", {"type": "object", "spec": {"id": "number"}}, "params"], "res", "params"],
-			[["web.output", "json"], "res", "params"]
+			["web.log", "res"],
+			[["web.input", "$params", "params"], "req", "params"],
+			[["web.input", "$query", "query"], "req", "query"],
+			[["web.output"], "res", "params", "query"]
 		]
 	}
 } 

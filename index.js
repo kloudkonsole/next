@@ -1,5 +1,10 @@
 const pStr = require('pico-common').export('pico/str')
+const pObj = require('pico-common').export('pico/obj')
 const service = require('./service.json')
+
+const radix = new pStr.Radix
+const mods = {}
+const routes = {}
 
 async function next(err, named, data = this.data){
 	if (err) throw err
@@ -35,19 +40,62 @@ async function next(err, named, data = this.data){
 	await middleware[0].apply(this, args)
 }
 
-function Host(service){
-	const radix = new pStr.Radix
-	const paths = Object.keys(service.routes)
-	paths.forEach(key => radix.add(key))
-
-	service.mod.forEach(cfg => {
-		const mod = require('./mod/' + cfg.id)
-		mod.setup(this, cfg, path)
-	})
-}
-
-Host.prototye = {
+const host = {
 	go(url,data){
 		return next(null, url, data)
 	}
 }
+
+const paths = Object.keys(service.routes)
+service.mod.forEach(cfg => {
+	const mod = require('./mod/' + cfg.id)
+	mod.setup(host, cfg, paths)
+	mods[cfg.id] = mod
+})
+
+paths.forEach(key => {
+	radix.add(key)
+	const pipeline = service.routes[key]
+	if (!Array.isArray(pipeline)) throw `invald routes ${key}`
+	const mws = routes[key] = []
+	pipeline.forEach((station, i) => {
+		if (!Array.isArray(station)) throw `invalid route ${key}.${station}`
+		const method = station[0]
+		let path = method
+		let params = []
+		if (Array.isArray(method)) {
+			path = method[0]
+
+			let spec
+			method.slice(1).forEach(param => {
+				if (!param.charAt){
+					params.push(param)
+					return
+				}
+				switch(param.charAt(0)){
+				case '$':
+					spec = service.spec[param.slice(1)]
+					if (!spec) throw `spec ${param} not found`
+					params.push(service.spec[param.slice(1)])
+					break
+				default:
+					params.push(param)
+					break
+				}
+			})
+		}
+		const arr = path.split('.')
+		const mname = arr.pop()
+		const obj = pObj.dot(mods, arr)
+		if (!obj || !obj[mname]) throw `undefined method ${key}.${path}`
+		const func = obj[mname]
+		const route = []
+		if (Array.isArray(method)){
+			route.push(func.apply(obj, params))
+		}else{
+			route.push(func)
+		}
+		route.push(...station.slice(1))
+		mws.push(route)
+	})
+})

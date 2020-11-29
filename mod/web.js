@@ -4,7 +4,7 @@ const pObj = require('pico-common').export('pico/obj')
 
 const FILTER = [['index', 'csv'], ['range', 'start', 'end']]
 const HAS_DATA = obj => obj && (Array.isArray(obj) || Object.keys(obj).length)
-const CREATE_BODY = (body, meta) => Object.assign({}, meta, {body})
+const CREATE_BODY = (body, meta) => JSON.stringify(Object.assign({}, meta, {body}))
 
 function pushFilter(input, filter, i, output){
 	for (let keys; (keys = filter[i]); i++){
@@ -90,7 +90,7 @@ module.exports = {
 				obj = this.params
 				break
 			case 'query':
-				obj = Object.assign({filter: []}, url.parse(req.url, 1))
+				obj = Object.assign({filter: []}, url.parse(req.url, 1).query)
 				pushFilter(obj, filter, 0, obj.filter)
 				break
 			case 'headers':

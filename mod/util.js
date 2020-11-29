@@ -1,4 +1,6 @@
 module.exports = {
+	setup: function(host, cfg, paths){
+	},
 	wait: async function(sec){
 		await new Promise((resolve, reject) => {
 			setTimeout(resolve, sec)
