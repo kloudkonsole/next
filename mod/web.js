@@ -1,5 +1,5 @@
 const http = require('http')
-const url = require('url')
+const URL = require('url')
 const pObj = require('pico-common').export('pico/obj')
 
 const FILTER = [['index', 'csv'], ['range', 'start', 'end']]
@@ -30,7 +30,8 @@ module.exports = {
 
 	setup: function(host, cfg, paths){
 		const proxy = http.createServer((req, res) => {
-			const err = host.go(req.url, {req, res})
+			const url = URL.parse(req.url, 1)
+			const err = host.go(url.pathname, {req, res, url})
 			if (err.charAt) {
 				res.statusCode = 404
 				return res.end(err)
@@ -80,21 +81,19 @@ module.exports = {
 	},
 
 	input: function(spec, src = 'body', filter = FILTER){
-		return function(req, output, ext) {
+		return function(input, output, ext) {
 			let obj
 			switch(src){
 			case 'body':
-				obj = req.body
+			case 'headers':
+				obj = input
 				break
 			case 'params':
 				obj = this.params
 				break
 			case 'query':
-				obj = Object.assign({filter: []}, url.parse(req.url, 1).query)
+				obj = Object.assign({filter: []}, input)
 				pushFilter(obj, filter, 0, obj.filter)
-				break
-			case 'headers':
-				obj = req.headers
 				break
 			}
 			const found = pObj.validate(spec, obj, output, ext)

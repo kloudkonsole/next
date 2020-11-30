@@ -54,18 +54,18 @@
 	},
 	"routes": {
 		"* * * * * *": [
-			["util.log", "#hello"]
+			["util.log", "hello"]
 		],
 		"/1.0/health": [
-			["web.log", "res"],
+			["web.log", "_.res"],
 			["util.wait", 5],
-			[["web.output", "json"], "$output"]
+			[["web.output", "text/plain", "text"], "hello"]
 		],
 		"/1.0/user/:id": [
-			["web.log", "res"],
-			[["web.input", "$params", "params"], "req", "params"],
-			[["web.input", "$query", "query"], "req", "query"],
-			[["web.output"], "res", "params", "query"]
+			["web.log", "_.res"],
+			[["web.input", "$.spec.params"], "$.params", "_.params"],
+			[["web.input", "$.spec.query", "$.spec.group"], "_.url.query", "_.query"],
+			[["web.output"], "_.res", "_.params", "_.query"]
 		]
 	}
 } 

@@ -21,7 +21,7 @@ async function next(err, named, data = this.data){
 
 	const args = middleware.slice(1).map(key => {
 		if (!key || !key.charAt) return key
-		let arg = data[key]
+		let arg = pObj.dot(data, key)
 		if (!arg){
 			switch(key.charAt(0)){
 			case ':':
@@ -73,13 +73,11 @@ paths.forEach(key => {
 					return
 				}
 				switch(param.charAt(0)){
-				case '$':
-					spec = service.spec[param.slice(1)]
-					if (!spec) throw `spec ${param} not found`
-					params.push(service.spec[param.slice(1)])
+				case '#':
+					params.push(param.slice(1))
 					break
 				default:
-					params.push(param)
+					params.push(pObj.dot(service, param.split('.')))
 					break
 				}
 			})
@@ -95,7 +93,9 @@ paths.forEach(key => {
 		}else{
 			route.push(func)
 		}
-		route.push(...station.slice(1))
+		station.slice(1).forEach(s => {
+			route.push(s.split('.'))
+		})
 		mws.push(route)
 	})
 })
