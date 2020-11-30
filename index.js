@@ -21,18 +21,34 @@ async function next(err, named, data = this.data){
 
 	const args = middleware.slice(1).map(key => {
 		if (!Array.isArray(key)) return key
+
+		let src
 		switch(key[0]){
-		case ':':
-			data[key] = arg = []
+		case '$':
+			src = this
 			break
-		case '#':
-			arg = key.substring(1)
+		case '_':
+			src = data
 			break
 		default:
-			data[key] = arg = {}
+			return key
+		}
+
+		let arg = pObj.dot(src, key.slice(1))
+		if (arg) return arg
+		if (key.length !== 2) return void 0
+
+		switch(key[1].charAt(0)){
+		case ':':
+			src[key] = arg = []
+			break
+		case '#':
+			src[key] = arg = {}
+			break
+		default:
+			arg = key
 			break
 		}
-		let arg = pObj.dot(data, key)
 		return arg
 	})
 	await middleware[0].apply(this, args)
@@ -74,7 +90,7 @@ paths.forEach(key => {
 				case '$':
 					p = param.split('.')
 					p.unshift()
-					params.push(pObj.dot(service, p))
+					params.push(pObj.dot(service, p.slice(1)))
 					break
 				default:
 					params.push(param)
