@@ -20,21 +20,19 @@ async function next(err, named, data = this.data){
 	if (!middleware) return
 
 	const args = middleware.slice(1).map(key => {
-		if (!key || !key.charAt) return key
-		let arg = pObj.dot(data, key)
-		if (!arg){
-			switch(key.charAt(0)){
-			case ':':
-				data[key] = arg = []
-				break
-			case '#':
-				arg = key.substring(1)
-				break
-			default:
-				data[key] = arg = {}
-				break
-			}
+		if (!Array.isArray(key)) return key
+		switch(key[0]){
+		case ':':
+			data[key] = arg = []
+			break
+		case '#':
+			arg = key.substring(1)
+			break
+		default:
+			data[key] = arg = {}
+			break
 		}
+		let arg = pObj.dot(data, key)
 		return arg
 	})
 	await middleware[0].apply(this, args)
@@ -66,18 +64,20 @@ paths.forEach(key => {
 		if (Array.isArray(method)) {
 			path = method[0]
 
-			let spec
 			method.slice(1).forEach(param => {
 				if (!param.charAt){
 					params.push(param)
 					return
 				}
+				let p
 				switch(param.charAt(0)){
-				case '#':
-					params.push(param.slice(1))
+				case '$':
+					p = param.split('.')
+					p.unshift()
+					params.push(pObj.dot(service, p))
 					break
 				default:
-					params.push(pObj.dot(service, param.split('.')))
+					params.push(param)
 					break
 				}
 			})
@@ -94,7 +94,19 @@ paths.forEach(key => {
 			route.push(func)
 		}
 		station.slice(1).forEach(s => {
-			route.push(s.split('.'))
+			if (!s.charAt) {
+				route.push(s)
+				return
+			}
+			switch(s.charAt(0)){
+			case '_':
+			case '$':
+				route.push(s.split('.'))
+				break
+			default:
+				route.push(s)
+				break
+			}
 		})
 		mws.push(route)
 	})

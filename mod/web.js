@@ -2,18 +2,17 @@ const http = require('http')
 const URL = require('url')
 const pObj = require('pico-common').export('pico/obj')
 
-const FILTER = [['index', 'csv'], ['range', 'start', 'end']]
 const HAS_DATA = obj => obj && (Array.isArray(obj) || Object.keys(obj).length)
 const CREATE_BODY = (body, meta) => JSON.stringify(Object.assign({}, meta, {body}))
 
-function pushFilter(input, filter, i, output){
-	for (let keys; (keys = filter[i]); i++){
-		const val0 = input[keys[0]]
+function groupQuery(input, grouping, output = []){
+	for (let i = 0, keys, val0; (keys = grouping[i]); i++){
+		val0 = input[keys[0]]
 		if (!val0) continue
 		if (Array.isArray(val0)){
-			for (let i = 0, l = val0.length; i < l; i++){
+			for (let j = 0, l = val0.length; j < l; j++){
 				output.push(keys.reduce((acc, key) => {
-					acc[key] = input[key][i]
+					acc[key] = input[key][j]
 					return acc
 				}, {}))
 			}
@@ -24,6 +23,7 @@ function pushFilter(input, filter, i, output){
 			}, {}))
 		}
 	}
+	return output
 }
 
 module.exports = {
@@ -48,6 +48,19 @@ module.exports = {
 			console.error(exp)
 			res.write(500, exp.message)
 			res.end(exp.message)
+		}
+	},
+
+	input: (spec, grouping) => {
+		return function(input, output, ext) {
+			let obj = input
+			if (grouping && grouping.length){
+				const group = groupQuery(input, grouping)
+				obj = Object.assign({group}, input)
+			}
+			const error = pObj.validate(spec, obj, output, ext)
+			if (error) return this.next(`invalid params [${error}]`)
+			return this.next()
 		}
 	},
 
@@ -76,28 +89,6 @@ module.exports = {
 				res.writeHead(204)
 				res.end()
 			}
-			return this.next()
-		}
-	},
-
-	input: function(spec, src = 'body', filter = FILTER){
-		return function(input, output, ext) {
-			let obj
-			switch(src){
-			case 'body':
-			case 'headers':
-				obj = input
-				break
-			case 'params':
-				obj = this.params
-				break
-			case 'query':
-				obj = Object.assign({filter: []}, input)
-				pushFilter(obj, filter, 0, obj.filter)
-				break
-			}
-			const found = pObj.validate(spec, obj, output, ext)
-			if (found) return this.next(`invalid params [${found}]`)
 			return this.next()
 		}
 	},

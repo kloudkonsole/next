@@ -9,6 +9,7 @@
 		"id": "util"
 	}],
 	"spec": {
+		"grouping": [["index", "csv"], ["range", "start", "end"]],
 		"params": {
 			"type": "object",
 			"spec": {
@@ -64,7 +65,7 @@
 		"/1.0/user/:id": [
 			["web.log", "_.res"],
 			[["web.input", "$.spec.params"], "$.params", "_.params"],
-			[["web.input", "$.spec.query", "$.spec.group"], "_.url.query", "_.query"],
+			[["web.input", "$.spec.query", "$.spec.grouping"], "_.url.query", "_.query"],
 			[["web.output"], "_.res", "_.params", "_.query"]
 		]
 	}
