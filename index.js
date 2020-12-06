@@ -62,7 +62,7 @@ const host = {
 
 const paths = Object.keys(service.routes)
 service.mod.forEach(cfg => {
-	const mod = require('./mod/' + cfg.id)
+	const mod = require(cfg.mod)
 	mod.setup(host, cfg, paths)
 	mods[cfg.id] = mod
 })

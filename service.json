@@ -1,13 +1,51 @@
 {
 	"mod": [{
 		"id": "web",
+		"mod": "./mod/web",
 		"host": "127.0.0.1",
 		"port": 1337
 	},{
-		"id": "timer"
+		"id": "db",
+		"mod": "./mod/json_mem",
+		"format": {
+			"pkey": "x",
+			"state": "state",
+			"created_at": "cat",
+			"updated_at": "uat",
+			"created_by": "cby",
+			"updated_by": "uby"
+		}
 	},{
-		"id": "util"
+		"id": "timer",
+		"mod": "./mod/timer"
+	},{
+		"id": "util",
+		"mod": "./mod/util"
 	}],
+	"rsc": {
+		"user": {
+			"format": {
+			},
+			"schema": {
+				"type": "object",
+				"spec": {
+					"name": {
+						"type": "array",
+						"gt": 0,
+						"spec": "string"
+					},
+					"ccode": "number",
+					"mobile": "number",
+					"email": "string",
+					"address": {
+						"type": "array",
+						"gt": 0,
+						"spec": "string"
+					}
+				}
+			}
+		}
+	},
 	"spec": {
 		"grouping": [["index", "csv"], ["range", "start", "end"]],
 		"params": {
