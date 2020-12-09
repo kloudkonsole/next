@@ -8,8 +8,8 @@
 		"id": "db",
 		"mod": "./mod/json_mem",
 		"format": {
-			"pkey": "x",
-			"state": "state",
+			"pkey": "i",
+			"state": "s",
 			"created_at": "cat",
 			"updated_at": "uat",
 			"created_by": "cby",
@@ -23,27 +23,31 @@
 		"mod": "./mod/util"
 	}],
 	"rsc": {
-		"user": {
+		"users": {
 			"format": {
 			},
-			"schema": {
-				"type": "object",
-				"spec": {
-					"name": {
-						"type": "array",
-						"gt": 0,
-						"spec": "string"
-					},
-					"ccode": "number",
-					"mobile": "number",
-					"email": "string",
-					"address": {
-						"type": "array",
-						"gt": 0,
-						"spec": "string"
+			"GET": {
+				"schema": {
+					"type": "object",
+					"spec": {
+						"name": {
+							"type": "array",
+							"gt": 0,
+							"spec": "string"
+						},
+						"ccode": "number",
+						"mobile": "number",
+						"email": "string",
+						"address": {
+							"type": "array",
+							"gt": 0,
+							"spec": "string"
+						}
 					}
 				}
 			}
+		},
+		"users/id": {
 		}
 	},
 	"spec": {
@@ -95,15 +99,32 @@
 		"* * * * * *": [
 			["util.log", "hello"]
 		],
+		"NEW/rcs": [
+		],
+		"GET/rcs": [
+			["web.input2", "_.params", "_.paramSpecName", "_.input1"],
+			["web.input2", "], "_.url.query", "_.query"]
+		],
+		"UPD/rcs/id": [
+			[]
+		],
+		"GET/rcs/id": [
+		],
+		"DEL/rcs/id": [
+		],
 		"/1.0/health": [
 			["web.log", "_.res"],
 			["util.wait", 5],
 			[["web.output", "text/plain", "text"], "hello"]
 		],
-		"/1.0/user/:id": [
+		"/1.0/:rcs": [
 			["web.log", "_.res"],
-			[["web.input", "$.spec.params"], "$.params", "_.params"],
-			[["web.input", "$.spec.query", "$.spec.grouping"], "_.url.query", "_.query"],
+			[["web.router", "$.rcs"], "_.req.method", "output", "meta"]
+			[["web.output"], "_.res", "_.params", "_.query"]
+		],
+		"/1.0/:rcs/:id": [
+			["web.log", "_.res"],
+			[["web.router", "$.rcs"], "_.req.method", "output", "meta"]
 			[["web.output"], "_.res", "_.params", "_.query"]
 		]
 	}

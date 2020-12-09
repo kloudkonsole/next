@@ -12,7 +12,7 @@ async function next(err, named, data = this.data){
 		const params = {}
 		const key = radix.match(named, params)
 		const route = routes[key]
-		if (!route) return 'not found'
+		if (!route) throw 'not found'
 		return next.call({params, next, route, data, ptr: 0}, null, null, data)
 	}
 

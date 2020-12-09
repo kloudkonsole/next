@@ -1,34 +1,15 @@
 const http = require('http')
 const URL = require('url')
+const qs = require('querystring'),
 const pObj = require('pico-common').export('pico/obj')
 
+const RAW = Symbol.for('raw')
 const HAS_DATA = obj => obj && (Array.isArray(obj) || Object.keys(obj).length)
 const CREATE_BODY = (body, meta) => JSON.stringify(Object.assign({}, meta, {body}))
 
-function groupQuery(input, grouping, output = []){
-	for (let i = 0, keys, val0; (keys = grouping[i]); i++){
-		val0 = input[keys[0]]
-		if (!val0) continue
-		if (Array.isArray(val0)){
-			for (let j = 0, l = val0.length; j < l; j++){
-				output.push(keys.reduce((acc, key) => {
-					acc[key] = input[key][j]
-					return acc
-				}, {}))
-			}
-		}else{
-			output.push(keys.reduce((acc, key) => {
-				acc[key] = input[key]
-				return acc
-			}, {}))
-		}
-	}
-	return output
-}
-
 module.exports = {
 
-	setup: function(host, cfg, paths){
+	setup(host, cfg, paths){
 		const proxy = http.createServer((req, res) => {
 			const url = URL.parse(req.url, 1)
 			const err = host.go(url.pathname, {req, res, url})
@@ -41,26 +22,62 @@ module.exports = {
 		proxy.listen(cfg.port, cfg.host, () => { })
 	},
 
-	log: async function (res){
+	async bodyParser(req, body){
+		return new Promise((resolve, reject) => {
+			const arr = []
+
+			req.on('data', chuck => {
+				arr.push(chuck)
+
+				// Too much POST data, kill the connection!
+				if (arr.length > 128) req.connection.destroy()
+			})
+			req.on('error',err => {
+				reject(err)
+				this.next(err)
+			})
+			req.on('end', ()=>{
+				const str=Buffer.concat(arr).toString()
+				const raw = {[RAW]: str}
+				try{
+					switch(req.headers['content-type']){
+					case 'application/x-www-form-urlencoded': Object.assign(body, qs.parse(str), raw); break
+					case 'text/plain': Object.assign(body, raw); break
+					case 'application/json': Object.assign(body, JSON.parse(str), raw); break
+					default: Object.assign(body, raw); break
+					}
+				}catch(exp){
+					Object.assign(body, raw)
+				}
+				resolve()
+				return this.next()
+			})
+		})
+	},
+
+	router(rcs){
+		return function(method, output, meta) {
+			const rc = rcs[method]
+			if (!rc) return next('unsupprted method: ' + method)
+			await this.next(null, name, {
+				output,
+				meta,
+				params: this.params,
+				querySpecName: rc.query,
+				bodySpecName: rc.body,
+				headerSpecName: rc.header,
+			})
+			return this.next()
+		}
+	},
+
+	async watch(res){
 		try {
 			await this.next()
 		}catch(exp){
 			console.error(exp)
 			res.write(500, exp.message)
 			res.end(exp.message)
-		}
-	},
-
-	input: (spec, grouping) => {
-		return function(input, output, ext) {
-			let obj = input
-			if (grouping && grouping.length){
-				const group = groupQuery(input, grouping)
-				obj = Object.assign({group}, input)
-			}
-			const error = pObj.validate(spec, obj, output, ext)
-			if (error) return this.next(`invalid params [${error}]`)
-			return this.next()
 		}
 	},
 
