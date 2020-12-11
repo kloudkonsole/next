@@ -99,18 +99,18 @@
 		"* * * * * *": [
 			["util.log", "hello"]
 		],
-		"NEW/rcs": [
+		"POST/rcs": [
 		],
 		"GET/rcs": [
-			["web.input2", "_.params", "_.paramSpecName", "_.input1"],
-			["web.input2", "], "_.url.query", "_.query"]
+			["web.input2", "_.params", "_.spec.param", "_.input1"],
+			["web.input2", "_.url.query", "_spec.query","_.query"]
 		],
-		"UPD/rcs/id": [
+		"PUT/rcs/id": [
 			[]
 		],
 		"GET/rcs/id": [
 		],
-		"DEL/rcs/id": [
+		"DELETE/rcs/id": [
 		],
 		"/1.0/health": [
 			["web.log", "_.res"],
@@ -118,14 +118,12 @@
 			[["web.output", "text/plain", "text"], "hello"]
 		],
 		"/1.0/:rcs": [
-			["web.log", "_.res"],
-			[["web.router", "$.rcs"], "_.req.method", "output", "meta"]
-			[["web.output"], "_.res", "_.params", "_.query"]
+			[["web.output"], "_.res", "_.output", "_.meta"]
+			[["web.router", "@.rcs"], "$.params", "_.req", "_.res", "_.output", "_.meta"]
 		],
 		"/1.0/:rcs/:id": [
-			["web.log", "_.res"],
-			[["web.router", "$.rcs"], "_.req.method", "output", "meta"]
-			[["web.output"], "_.res", "_.params", "_.query"]
+			[["web.output"], "_.res", "_.output", "_.meta"]
+			[["web.router", "@.rcs"], "$.params", "_.req.method", "_.output", "_.meta"]
 		]
 	}
 } 

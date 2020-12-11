@@ -54,30 +54,28 @@ module.exports = {
 			})
 		})
 	},
-
-	router(rcs){
-		return function(method, output, meta) {
-			const rc = rcs[method]
+	// @ spec
+	// $ this
+	// _ data
+	router: rcs => {
+		return function(req, res, output, meta) {
+			const indi = params.id ? '/id' : ''
+			const key = params.rcs + indo
+			const rc = rcs[key]
+			if (!rc) return next('unsupprted key: ' + method)
+			const method = req.method
+			const spec = rc[method]
 			if (!rc) return next('unsupprted method: ' + method)
+			const name = req.method + '/rcs' + indi
 			await this.next(null, name, {
 				output,
 				meta,
-				params: this.params,
-				querySpecName: rc.query,
-				bodySpecName: rc.body,
-				headerSpecName: rc.header,
+				req,
+				res,
+				params,
+				spec: 
 			})
 			return this.next()
-		}
-	},
-
-	async watch(res){
-		try {
-			await this.next()
-		}catch(exp){
-			console.error(exp)
-			res.write(500, exp.message)
-			res.end(exp.message)
 		}
 	},
 
@@ -97,16 +95,23 @@ module.exports = {
 			break
 		}
 
-		return function(res, data, meta){
+		return async function(res, data, meta){
 			if (!res) return this.next()
-			if (hasData(data) || hasData(meta)) {
-				res.writeHead(200, headers)
-				res.end(createBody(data, meta))
-			} else {
-				res.writeHead(204)
-				res.end()
+
+			try {
+				await this.next()
+				if (hasData(data) || hasData(meta)) {
+					res.writeHead(200, headers)
+					res.end(createBody(data, meta))
+				} else {
+					res.writeHead(204)
+					res.end()
+				}
+			} catch(exp) {
+				console.error(exp)
+				res.write(500, exp.message)
+				res.end(exp.message)
 			}
-			return this.next()
 		}
 	},
 }
