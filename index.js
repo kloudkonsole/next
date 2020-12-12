@@ -78,7 +78,7 @@ paths.forEach(key => {
 	if (!Array.isArray(pipeline)) throw `invald routes ${key}`
 	const mws = routes[key] = []
 	pipeline.forEach((station, i) => {
-		if (!Array.isArray(station)) throw `invalid route ${key}.${station}`
+		if (!Array.isArray(station) || !station.length) throw `invalid route ${key}.${station}`
 		const method = station[0]
 		let path = method
 		let params = []
@@ -106,7 +106,7 @@ paths.forEach(key => {
 		const arr = path.split('.')
 		const mname = arr.pop()
 		const obj = pObj.dot(mods, arr)
-		if (!obj || !obj[mname]) throw `undefined method ${key}.${path}`
+		if (!obj || !obj[mname]) throw `undefined method key:${key} path:${path}`
 		const func = obj[mname]
 		const route = []
 		if (Array.isArray(method)){

@@ -102,20 +102,18 @@
 		"POST/rcs": [
 		],
 		"GET/rcs": [
-			["web.input2", "_.params", "_.spec.param", "_.input1"],
-			["web.input2", "_.url.query", "_spec.query","_.query"]
+			["util.input2", "_.params", "_.spec.param", "_.input1"],
+			["util.input2", "_.url.query", "_spec.query","_.query"]
 		],
 		"PUT/rcs/id": [
-			[]
 		],
 		"GET/rcs/id": [
 		],
 		"DELETE/rcs/id": [
 		],
 		"/1.0/health": [
-			["web.log", "_.res"],
-			["util.wait", 5],
-			[["web.output", "text/plain", "text"], "hello"]
+			[["web.output", "text/plain", "text"], "hello"],
+			["util.wait", 5]
 		],
 		"/1.0/:rcs": [
 			[["web.output"], "_.res", "_.output", "_.meta"],

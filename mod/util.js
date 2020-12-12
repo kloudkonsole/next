@@ -43,13 +43,13 @@ module.exports = {
 		return this.next()
 	},
 
-	Input: spec => function(input, output, ext) {
+	input: spec => function(input, output, ext) {
 		const error = pObj.validate(spec, input, output, ext)
 		if (error) return this.next(`invalid params [${error}]`)
 		return this.next()
 	},
 
-	Input2(input, spec, output, ext) {
+	input2(input, spec, output, ext) {
 		const error = pObj.validate(spec, input, output, ext)
 		if (error) return this.next(`invalid params [${error}]`)
 		return this.next()
