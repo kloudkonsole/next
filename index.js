@@ -17,7 +17,7 @@ async function next(err, named, data = this.data){
 		const params = {}
 		const key = radix.match(named, params)
 		const route = routes[key]
-		if (!route) throw 'not found'
+		if (!route) return 'not found'
 		return next.call({params, next, route, data, ptr: 0}, null, null, data)
 	}
 
@@ -42,16 +42,17 @@ async function next(err, named, data = this.data){
 			return key
 		}
 
-		let arg = pObj.dot(src, key.slice(1))
+		const path = key.slice(1)
+		let arg = pObj.dot(src, path)
 		if (arg) return arg
-		if (key.length !== 2) return void 0
+		if ('_' !== key[0] || key.length !== 2) return void 0
 
 		switch(key[1].charAt(0)){
 		case ':':
-			src[key] = arg = []
+			src[path.join('.')] = arg = []
 			break
 		default:
-			src[key] = arg = {}
+			src[path.join('.')] = arg = {}
 			break
 		}
 		return arg

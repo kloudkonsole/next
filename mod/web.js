@@ -59,24 +59,18 @@ module.exports = {
 	 * $ this
 	 * _ data
 	 */
-	router: rcs => async function(req, res, output, meta) {
-		const params = this.params
+	router: rsc => async function(method, params) {
 		const indi = params.id ? '/id' : ''
-		const key = params.rcs + indi
-		const rc = rcs[key]
+		const key = params.rsc + indi
+		const rc = rsc[key]
 		if (!rc) return this.next(`unsupprted key: ${key}`)
-		const method = req.method
 		const spec = rc[method]
-		if (!rc) return this.next(`unsupprted method: ${method}`)
-		const name = `${req.method}/rcs${indi}`
-		await this.next(null, name, {
-			output,
-			meta,
-			req,
-			res,
+		if (!spec) return this.next(`unsupprted method: ${method}`)
+		const name = `${method}/rsc${indi}`
+		await this.next(null, name, Object.assign({
 			params,
 			spec
-		})
+		}, this.data))
 		return this.next()
 	},
 
@@ -110,8 +104,8 @@ module.exports = {
 				}
 			} catch(exp) {
 				console.error(exp)
-				res.write(500, exp.message)
-				res.end(exp.message)
+				res.writeHead(500, exp.message || exp)
+				res.end(exp.message || exp)
 			}
 		}
 	}

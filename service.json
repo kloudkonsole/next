@@ -55,6 +55,10 @@
 		"params": {
 			"type": "object",
 			"spec": {
+				"rsc": {
+					"type": "string",
+					"required": 1
+				},
 				"id": "string"
 			}
 		},
@@ -99,29 +103,29 @@
 		"* * * * * *": [
 			["util.log", "hello"]
 		],
-		"POST/rcs": [
+		"POST/rsc": [
 		],
-		"GET/rcs": [
-			["util.input2", "_.params", "_.spec.param", "_.input1"],
-			["util.input2", "_.url.query", "_spec.query","_.query"]
+		"GET/rsc": [
+			["util.input2", "_.params", "@.spec.params", "_.output"],
+			["util.input2", "_.url.query", "@.spec.query","_.meta"]
 		],
-		"PUT/rcs/id": [
+		"PUT/rsc/id": [
 		],
-		"GET/rcs/id": [
+		"GET/rsc/id": [
 		],
-		"DELETE/rcs/id": [
+		"DELETE/rsc/id": [
 		],
 		"/1.0/health": [
-			[["web.output", "text/plain", "text"], "hello"],
+			[["web.output", "text/plain", "text"], "_.res", "hello"],
 			["util.wait", 5]
 		],
-		"/1.0/:rcs": [
+		"/1.0/:rsc": [
 			[["web.output"], "_.res", "_.output", "_.meta"],
-			[["web.router", "@.rcs"], "$.params", "_.req", "_.res", "_.output", "_.meta"]
+			[["web.router", "@.rsc"], "_.req.method", "$.params"]
 		],
-		"/1.0/:rcs/:id": [
+		"/1.0/:rsc/:id": [
 			[["web.output"], "_.res", "_.output", "_.meta"],
-			[["web.router", "@.rcs"], "$.params", "_.req.method", "_.output", "_.meta"]
+			[["web.router", "@.rsc"], "_.req.method", "$.params"]
 		]
 	}
 } 
