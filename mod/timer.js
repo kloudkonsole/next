@@ -1,4 +1,4 @@
 module.exports = {
-	setup: function(host, cfg, paths){
-	},
+	setup(host, cfg, paths){
+	}
 }

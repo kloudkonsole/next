@@ -118,11 +118,11 @@
 			[["web.output", "text/plain", "text"], "hello"]
 		],
 		"/1.0/:rcs": [
-			[["web.output"], "_.res", "_.output", "_.meta"]
+			[["web.output"], "_.res", "_.output", "_.meta"],
 			[["web.router", "@.rcs"], "$.params", "_.req", "_.res", "_.output", "_.meta"]
 		],
 		"/1.0/:rcs/:id": [
-			[["web.output"], "_.res", "_.output", "_.meta"]
+			[["web.output"], "_.res", "_.output", "_.meta"],
 			[["web.router", "@.rcs"], "$.params", "_.req.method", "_.output", "_.meta"]
 		]
 	}

@@ -1,7 +1,6 @@
 const http = require('http')
 const URL = require('url')
-const qs = require('querystring'),
-const pObj = require('pico-common').export('pico/obj')
+const qs = require('querystring')
 
 const RAW = Symbol.for('raw')
 const HAS_DATA = obj => obj && (Array.isArray(obj) || Object.keys(obj).length)
@@ -22,7 +21,7 @@ module.exports = {
 		proxy.listen(cfg.port, cfg.host, () => { })
 	},
 
-	async bodyParser(req, body){
+	bodyParser(req, body){
 		return new Promise((resolve, reject) => {
 			const arr = []
 
@@ -36,8 +35,8 @@ module.exports = {
 				reject(err)
 				this.next(err)
 			})
-			req.on('end', ()=>{
-				const str=Buffer.concat(arr).toString()
+			req.on('end', () => {
+				const str = Buffer.concat(arr).toString()
 				const raw = {[RAW]: str}
 				try{
 					switch(req.headers['content-type']){
@@ -54,34 +53,36 @@ module.exports = {
 			})
 		})
 	},
-	// @ spec
-	// $ this
-	// _ data
-	router: rcs => {
-		return function(req, res, output, meta) {
-			const indi = params.id ? '/id' : ''
-			const key = params.rcs + indo
-			const rc = rcs[key]
-			if (!rc) return next('unsupprted key: ' + method)
-			const method = req.method
-			const spec = rc[method]
-			if (!rc) return next('unsupprted method: ' + method)
-			const name = req.method + '/rcs' + indi
-			await this.next(null, name, {
-				output,
-				meta,
-				req,
-				res,
-				params,
-				spec: 
-			})
-			return this.next()
-		}
+
+	/*
+	 * @ spec
+	 * $ this
+	 * _ data
+	 */
+	router: rcs => async function(req, res, output, meta) {
+		const params = this.params
+		const indi = params.id ? '/id' : ''
+		const key = params.rcs + indi
+		const rc = rcs[key]
+		if (!rc) return this.next(`unsupprted key: ${key}`)
+		const method = req.method
+		const spec = rc[method]
+		if (!rc) return this.next(`unsupprted method: ${method}`)
+		const name = `${req.method}/rcs${indi}`
+		await this.next(null, name, {
+			output,
+			meta,
+			req,
+			res,
+			params,
+			spec
+		})
+		return this.next()
 	},
 
 	output: (contentType = 'application/json', dataType = 'json') => {
 		let headers = {}
-		Object.assign(headers, { 'Content-Type': contentType })
+		Object.assign(headers, {'Content-Type': contentType})
 
 		let hasData = HAS_DATA
 		let createBody = CREATE_BODY
@@ -113,5 +114,5 @@ module.exports = {
 				res.end(exp.message)
 			}
 		}
-	},
+	}
 }

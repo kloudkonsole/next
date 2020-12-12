@@ -6,6 +6,11 @@ const radix = new pStr.Radix
 const mods = {}
 const routes = {}
 
+/**
+ * @param err
+ * @param named
+ * @param data
+ */
 async function next(err, named, data = this.data){
 	if (err) throw err
 	if (named) {
@@ -24,6 +29,9 @@ async function next(err, named, data = this.data){
 
 		let src
 		switch(key[0]){
+		case '@':
+			src = service
+			break
 		case '$':
 			src = this
 			break
@@ -42,11 +50,8 @@ async function next(err, named, data = this.data){
 		case ':':
 			src[key] = arg = []
 			break
-		case '#':
-			src[key] = arg = {}
-			break
 		default:
-			arg = key
+			src[key] = arg = {}
 			break
 		}
 		return arg
@@ -87,7 +92,7 @@ paths.forEach(key => {
 				}
 				let p
 				switch(param.charAt(0)){
-				case '$':
+				case '@':
 					p = param.split('.')
 					p.unshift()
 					params.push(pObj.dot(service, p.slice(1)))
@@ -117,6 +122,7 @@ paths.forEach(key => {
 			switch(s.charAt(0)){
 			case '_':
 			case '$':
+			case '@':
 				route.push(s.split('.'))
 				break
 			default:

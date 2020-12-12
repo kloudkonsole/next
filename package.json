@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-	"lint": "eslint .",
-	"lint:fix": "eslint . --fix"
+    "lint": "eslint .  --ext .json,.js",
+    "lint:fix": "eslint .  --ext .json,.js --fix"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,8 @@
     "pico-common": "^0.14.4"
   },
   "devDependencies": {
-    "eslint": "^7.14.0"
+    "eslint": "^7.15.0",
+    "eslint-plugin-jsdoc": "^30.7.8",
+    "eslint-plugin-json": "^2.1.2"
   }
 }
