@@ -2,6 +2,11 @@ const pStr = require('pico-common').export('pico/str')
 const pObj = require('pico-common').export('pico/obj')
 const service = require('./service.json')
 
+const SRC_SPEC = '@'
+const SRC_CTX = '$'
+const SRC_DATA = '_'
+const TYPE_ARR = ':'
+const SEP = '.'
 const radix = new pStr.Radix
 const mods = {}
 const routes = {}
@@ -29,13 +34,13 @@ async function next(err, named, data = this.data){
 
 		let src
 		switch(key[0]){
-		case '@':
+		case SRC_SPEC:
 			src = service
 			break
-		case '$':
+		case SRC_CTX:
 			src = this
 			break
-		case '_':
+		case SRC_DATA:
 			src = data
 			break
 		default:
@@ -45,14 +50,14 @@ async function next(err, named, data = this.data){
 		const path = key.slice(1)
 		let arg = pObj.dot(src, path)
 		if (arg) return arg
-		if ('_' !== key[0] || key.length !== 2) return void 0
+		if (SRC_DATA !== key[0] || key.length !== 2) return void 0
 
 		switch(key[1].charAt(0)){
-		case ':':
-			src[path.join('.')] = arg = []
+		case TYPE_ARR:
+			src[path.join(SEP)] = arg = []
 			break
 		default:
-			src[path.join('.')] = arg = {}
+			src[path.join(SEP)] = arg = {}
 			break
 		}
 		return arg
@@ -93,8 +98,8 @@ paths.forEach(key => {
 				}
 				let p
 				switch(param.charAt(0)){
-				case '@':
-					p = param.split('.')
+				case SRC_SPEC:
+					p = param.split(SEP)
 					p.unshift()
 					params.push(pObj.dot(service, p.slice(1)))
 					break
@@ -104,7 +109,7 @@ paths.forEach(key => {
 				}
 			})
 		}
-		const arr = path.split('.')
+		const arr = path.split(SEP)
 		const mname = arr.pop()
 		const obj = pObj.dot(mods, arr)
 		if (!obj || !obj[mname]) throw `undefined method key:${key} path:${path}`
@@ -121,10 +126,10 @@ paths.forEach(key => {
 				return
 			}
 			switch(s.charAt(0)){
-			case '_':
-			case '$':
-			case '@':
-				route.push(s.split('.'))
+			case SRC_DATA:
+			case SRC_CTX:
+			case SRC_SPEC:
+				route.push(s.split(SEP))
 				break
 			default:
 				route.push(s)
