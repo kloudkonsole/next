@@ -26,28 +26,24 @@
 		"users": {
 			"format": {
 			},
-			"GET": {
-				"schema": {
-					"type": "object",
-					"spec": {
-						"name": {
-							"type": "array",
-							"gt": 0,
-							"spec": "string"
-						},
-						"ccode": "number",
-						"mobile": "number",
-						"email": "string",
-						"address": {
-							"type": "array",
-							"gt": 0,
-							"spec": "string"
-						}
+			"schema": {
+				"type": "object",
+				"spec": {
+					"name": {
+						"type": "array",
+						"gt": 0,
+						"spec": "string"
+					},
+					"ccode": "number",
+					"mobile": "number",
+					"email": "string",
+					"address": {
+						"type": "array",
+						"gt": 0,
+						"spec": "string"
 					}
 				}
 			}
-		},
-		"users/id": {
 		}
 	},
 	"spec": {
@@ -104,9 +100,10 @@
 			["util.log", "hello"]
 		],
 		"POST/rsc": [
+			["web.bodyParser", "_.req", "_.input"],
+			["util.input2", "_.input", "_.rc.schema", "_.output"]
 		],
 		"GET/rsc": [
-			["util.input2", "_.params", "@.spec.params", "_.output"],
 			["util.input2", "_.url.query", "@.spec.query","_.meta"]
 		],
 		"PUT/rsc/id": [
@@ -121,11 +118,13 @@
 		],
 		"/1.0/:rsc": [
 			[["web.output"], "_.res", "_.output", "_.meta"],
-			[["web.router", "@.rsc"], "_.req.method", "$.params"]
+			["util.input2", "$.params", "@.spec.params", "_.params"],
+			[["web.router", "@.rsc"], "_.req.method", "_.params"]
 		],
 		"/1.0/:rsc/:id": [
 			[["web.output"], "_.res", "_.output", "_.meta"],
-			[["web.router", "@.rsc"], "_.req.method", "$.params"]
+			["util.input2", "$.params", "@.spec.params", "_.output"],
+			[["web.router", "@.rsc"], "_.req.method", "_.output"]
 		]
 	}
 } 

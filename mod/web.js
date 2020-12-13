@@ -60,16 +60,13 @@ module.exports = {
 	 * _ data
 	 */
 	router: rsc => async function(method, params) {
-		const indi = params.id ? '/id' : ''
-		const key = params.rsc + indi
-		const rc = rsc[key]
-		if (!rc) return this.next(`unsupprted key: ${key}`)
-		const spec = rc[method]
-		if (!spec) return this.next(`unsupprted method: ${method}`)
+		const rc = rsc[params.rsc]
+		if (!rc) return this.next(`unsupprted key: ${params.rsc}`)
+		const indi = params.id ? `/id` : ''
 		const name = `${method}/rsc${indi}`
 		await this.next(null, name, Object.assign({
 			params,
-			spec
+			rc
 		}, this.data))
 		return this.next()
 	},
