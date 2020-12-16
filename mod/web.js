@@ -8,7 +8,7 @@ const CREATE_BODY = (body, meta) => JSON.stringify(Object.assign({}, meta, {body
 
 module.exports = {
 
-	setup(host, cfg, paths){
+	setup(host, cfg, rsc, paths){
 		const proxy = http.createServer((req, res) => {
 			const url = URL.parse(req.url, 1)
 			const err = host.go(url.pathname, {req, res, url})
@@ -62,7 +62,7 @@ module.exports = {
 	router: rsc => async function(method, params) {
 		const rc = rsc[params.rsc]
 		if (!rc) return this.next(`unsupprted key: ${params.rsc}`)
-		const indi = params.id ? `/id` : ''
+		const indi = params.id ? '/id' : ''
 		const name = `${method}/rsc${indi}`
 		await this.next(null, name, Object.assign({
 			params,

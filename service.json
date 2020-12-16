@@ -7,13 +7,16 @@
 	},{
 		"id": "db",
 		"mod": "./mod/json_mem",
-		"format": {
-			"pkey": "i",
-			"state": "s",
-			"created_at": "cat",
-			"updated_at": "uat",
-			"created_by": "cby",
-			"updated_by": "uby"
+		"meta": {
+			"type": "object",
+			"spec": {
+				"i": "number",
+				"s": "number",
+				"cat": "number",
+				"uat": "date",
+				"cby": "number",
+				"uby": "date"
+			}
 		}
 	},{
 		"id": "timer",
@@ -21,10 +24,13 @@
 	},{
 		"id": "util",
 		"mod": "./mod/util"
+	},{
+		"id": "jsonmem",
+		"mod": "./mod/json_mem"
 	}],
 	"rsc": {
 		"users": {
-			"format": {
+			"meta": {
 			},
 			"schema": {
 				"type": "object",
@@ -101,30 +107,43 @@
 		],
 		"POST/rsc": [
 			["web.bodyParser", "_.req", "_.input"],
-			["util.input2", "_.input", "_.rc.schema", "_.output"]
+			["util.input2", "_.input", "_.rc.schema", "_.valid"],
+			["jsonmem.set", "_.params.rcs", null, "_.valid", "_.res"],
+			["jsonmem.get", "_.params.rcs", "_.res.id", "_.output"],
+			["util.push", "_.output", "_.:output"]
 		],
 		"GET/rsc": [
-			["util.input2", "_.url.query", "@.spec.query","_.meta"]
+			["util.input2", "_.url.query", "@.spec.query","_.meta"],
+			["jsonmem.find", "_.params.rcs", "_.meta", "_.:output"]
 		],
 		"PUT/rsc/id": [
+			["web.bodyParser", "_.req", "_.input"],
+			["jsonmem.get", "_.params.rcs", "_.params.id", "_.origin"],
+			["util.extend", "_.origin.doc", "_.input", "_.updated"],
+			["util.input2", "_.updated", "_.rc.schema", "_.valid"],
+			["jsonmem.set", "_.params.rcs", "_.params.id", "_.valid", "_.res"],
+			["jsonmem.get", "_.params.rcs", "_.res.id", "_.output"]
 		],
 		"GET/rsc/id": [
+			["jsonmem.get", "_.params.rcs", "_.params.id", "_.output"]
 		],
 		"DELETE/rsc/id": [
+			["jsonmem.hide", "_.params.rcs", "_.params.id"],
+			["jsonmem.get", "_.params.rcs", "_.params.id", "_.output"]
 		],
 		"/1.0/health": [
 			[["web.output", "text/plain", "text"], "_.res", "hello"],
 			["util.wait", 5]
 		],
 		"/1.0/:rsc": [
-			[["web.output"], "_.res", "_.output", "_.meta"],
+			[["web.output"], "_.res", "_.:output", "_.meta"],
 			["util.input2", "$.params", "@.spec.params", "_.params"],
 			[["web.router", "@.rsc"], "_.req.method", "_.params"]
 		],
 		"/1.0/:rsc/:id": [
 			[["web.output"], "_.res", "_.output", "_.meta"],
-			["util.input2", "$.params", "@.spec.params", "_.output"],
-			[["web.router", "@.rsc"], "_.req.method", "_.output"]
+			["util.input2", "$.params", "@.spec.params", "_.params"],
+			[["web.router", "@.rsc"], "_.req.method", "_.params"]
 		]
 	}
 } 

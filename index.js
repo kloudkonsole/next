@@ -2,6 +2,13 @@ const pStr = require('pico-common').export('pico/str')
 const pObj = require('pico-common').export('pico/obj')
 const service = require('./service.json')
 
+const KEYWORDS = [
+	'params',
+	'next',
+	'route',
+	'data',
+	'ptr'
+]
 const SRC_SPEC = '@'
 const SRC_CTX = '$'
 const SRC_DATA = '_'
@@ -9,12 +16,16 @@ const TYPE_ARR = ':'
 const SEP = '.'
 const radix = new pStr.Radix
 const mods = {}
+const libs = {}
 const routes = {}
 
 /**
- * @param err
- * @param named
- * @param data
+ * Forward to next middelware
+ *
+ * @param {object} err - error object
+ * @param {string} named - if given it start the named pipeline instead of continuing the current pipeline
+ * @param {object} [data = this.data] - data use in current pipeline
+ * @returns {void} - no returns
  */
 async function next(err, named, data = this.data){
 	if (err) throw err
@@ -23,7 +34,7 @@ async function next(err, named, data = this.data){
 		const key = radix.match(named, params)
 		const route = routes[key]
 		if (!route) return 'not found'
-		return next.call({params, next, route, data, ptr: 0}, null, null, data)
+		return next.call(Object.assign({}, libs, {params, next, route, data, ptr: 0}), null, null, data)
 	}
 
 	const middleware = this.route[this.ptr++]
@@ -66,16 +77,18 @@ async function next(err, named, data = this.data){
 }
 
 const host = {
-	go(url,data){
+	go(url, data){
 		return next(null, url, data)
 	}
 }
 
 const paths = Object.keys(service.routes)
 service.mod.forEach(cfg => {
+	const id = cfg.id
+	if (!id || KEYWORDS.includes(id)) throw `invalid id [${id}]`
 	const mod = require(cfg.mod)
-	mod.setup(host, cfg, paths)
-	mods[cfg.id] = mod
+	Object.assign(libs, {[id]: mod.setup(host, cfg, service.rsc, paths)})
+	mods[id] = mod
 })
 
 paths.forEach(key => {
@@ -121,7 +134,7 @@ paths.forEach(key => {
 			route.push(func)
 		}
 		station.slice(1).forEach(s => {
-			if (!s.charAt) {
+			if (null == s || !s.charAt) {
 				route.push(s)
 				return
 			}

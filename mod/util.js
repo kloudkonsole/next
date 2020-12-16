@@ -27,7 +27,7 @@ function groupQuery(input, grouping, output = []){
 }
 
 module.exports = {
-	setup(host, cfg, paths){
+	setup(host, cfg, rsc, paths){
 	},
 
 	async wait(sec){
@@ -61,6 +61,17 @@ module.exports = {
 		} else {
 			Object.assign(output, input)
 		}
+		return this.next()
+	},
+
+	extend(...args){
+		const output = args.pop()
+		pObj.extends(output, args)
+		return this.next()
+	},
+
+	push(item, array){
+		array.push(item)
 		return this.next()
 	}
 }
