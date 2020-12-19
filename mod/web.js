@@ -54,19 +54,14 @@ module.exports = {
 		})
 	},
 
-	/*
-	 * @ spec
-	 * $ this
-	 * _ data
-	 */
 	router: rsc => async function(method, params) {
-		const rc = rsc[params.rsc]
-		if (!rc) return this.next(`unsupprted key: ${params.rsc}`)
+		const rs = rsc[params.rsc]
+		if (!rs) return this.next(`unsupprted key: ${params.rsc}`)
 		const indi = params.id ? '/id' : ''
 		const name = `${method}/rsc${indi}`
 		await this.next(null, name, Object.assign({
 			params,
-			rc
+			rs
 		}, this.data))
 		return this.next()
 	},
@@ -87,14 +82,14 @@ module.exports = {
 			break
 		}
 
-		return async function(res, data, meta){
+		return async function(res, output, meta){
 			if (!res) return this.next()
 
 			try {
 				await this.next()
-				if (hasData(data) || hasData(meta)) {
+				if (hasData(output) || hasData(meta)) {
 					res.writeHead(200, headers)
-					res.end(createBody(data, meta))
+					res.end(createBody(output, meta))
 				} else {
 					res.writeHead(204)
 					res.end()

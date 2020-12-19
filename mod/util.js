@@ -1,9 +1,12 @@
 const pObj = require('pico-common').export('pico/obj')
 
 /**
- * @param input
- * @param grouping
- * @param output
+ * group object's array to array objects
+ *
+ * @param {object} input - parsed querystring
+ * @param {array} grouping - keys to be group
+ * @param {array} output - output array
+ * @returns {array} - output array
  */
 function groupQuery(input, grouping, output = []){
 	for (let i = 0, keys, val0; (keys = grouping[i]); i++){
@@ -39,7 +42,9 @@ module.exports = {
 
 	log(...args) {
 		// eslint-disable-next-line no-console
-		args.forEach(console.log)
+		for (const a of args){
+			console.log(a)
+		}
 		return this.next()
 	},
 
@@ -56,7 +61,7 @@ module.exports = {
 	},
 
 	group(input, grouping, output){
-		if (grouping && grouping.length){
+		if (Array.isArray(grouping) && grouping.length){
 			Object.assign(output, {group: groupQuery(input, grouping)}, input)
 		} else {
 			Object.assign(output, input)

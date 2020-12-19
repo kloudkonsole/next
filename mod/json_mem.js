@@ -1,16 +1,19 @@
 let KEY
 
 /**
- * @param host
- * @param meta
- * @param rc
+ * Collection class
+ *
+ * @param {object} host - host object
+ * @param {object} meta - meta object
+ * @param {object} rs - resource
+ * @returns {object} - this
  */
-function Collection(host, meta, rc){
+function Collection(host, meta, rs){
 	this.host = host
 	this.index = 1
 	this.documents = []
-	this.meta = Object.assign({}, meta, rc.meta)
-	this.schema = Object.assign({}, rc.schema)
+	this.meta = Object.assign({}, meta, rs.meta)
+	this.schema = Object.assign({}, rs.schema)
 }
 
 Collection.prototype = {
@@ -26,6 +29,7 @@ Collection.prototype = {
 	},
 	select(q){
 		const docs = this.documents
+		if (!Array.isArray(q.csv)) return docs.slice()
 		return q.csv.map(i => docs.find(item => i === item.i)).filter(item => item)
 	},
 	update(i, d){
@@ -40,7 +44,7 @@ Collection.prototype = {
 	remove(i){
 		for (let j = 0, d, docs = this.documents; (d = docs[j]); j++){
 			if (i === d.i){
-				docs.splice(i, 1)
+				d.s = 0
 				break
 			}
 		}
@@ -48,24 +52,25 @@ Collection.prototype = {
 }
 
 module.exports = {
-	setup(host, cfg, rcs, paths){
+	setup(host, cfg, rsc, paths){
 		KEY = cfg.id
 		const meta = cfg.meta
-		return Object.keys(rcs).reduce((acc, name) => {
-			const rc = rcs[name]
-			if (!rc) return acc
-			acc[name] = new Collection(host, meta, rc)
+		return Object.keys(rsc).reduce((acc, name) => {
+			const rs = rsc[name]
+			if (!rs) return acc
+			acc[name] = new Collection(host, meta, rs)
 			return acc
 		}, {})
 	},
-	set(name, input, id, output){
+	set(name, i, input, output){
 		const col = this[KEY][name]
-		if (id){
-			col.update(id, input)
+		if (i){
+			col.update(i, input)
+			Object.assign(output, {i})
 		}else{
-			id = col.insert(input)
+			const res = col.insert(input)
+			Object.assign(output, res)
 		}
-		Object.assign({id})
 		return this.next()
 	},
 	get(name, id, output){
@@ -81,7 +86,7 @@ module.exports = {
 	},
 	hide(name, id){
 		const col = this[KEY][name]
-		col.update(id, {s: 0})
+		col.remove(id)
 		return this.next()
 	}
 }

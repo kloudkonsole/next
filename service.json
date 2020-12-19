@@ -61,17 +61,18 @@
 					"type": "string",
 					"required": 1
 				},
-				"id": "string"
+				"id": "number"
 			}
 		},
 		"query": {
 			"type": "object",
+			"required": 1,
 			"spec": {
 				"page": "number",
 				"size": "number",
 				"sort": "string",
 				"q": "string",
-				"filter": {
+				"group": {
 					"type": "array",
 					"sep": "~",
 					"spec": {
@@ -107,29 +108,30 @@
 		],
 		"POST/rsc": [
 			["web.bodyParser", "_.req", "_.input"],
-			["util.input2", "_.input", "_.rc.schema", "_.valid"],
-			["jsonmem.set", "_.params.rcs", null, "_.valid", "_.res"],
-			["jsonmem.get", "_.params.rcs", "_.res.id", "_.output"],
+			["util.input2", "_.input", "_.rs.schema", "_.valid"],
+			["jsonmem.set", "_.params.rsc", null, "_.valid", "_.out"],
+			["jsonmem.get", "_.params.rsc", "_.out.i", "_.output"],
 			["util.push", "_.output", "_.:output"]
 		],
 		"GET/rsc": [
-			["util.input2", "_.url.query", "@.spec.query","_.meta"],
-			["jsonmem.find", "_.params.rcs", "_.meta", "_.:output"]
+			["util.group", "_.url.query", "@.spec.grouping", "_.query"],
+			["util.input2", "_.query", "@.spec.query","_.meta"],
+			["jsonmem.find", "_.params.rsc", "_.meta", "_.:output"]
 		],
 		"PUT/rsc/id": [
 			["web.bodyParser", "_.req", "_.input"],
-			["jsonmem.get", "_.params.rcs", "_.params.id", "_.origin"],
-			["util.extend", "_.origin.doc", "_.input", "_.updated"],
-			["util.input2", "_.updated", "_.rc.schema", "_.valid"],
-			["jsonmem.set", "_.params.rcs", "_.params.id", "_.valid", "_.res"],
-			["jsonmem.get", "_.params.rcs", "_.res.id", "_.output"]
+			["jsonmem.get", "_.params.rsc", "_.params.id", "_.origin"],
+			["util.extend", "_.origin.d", "_.input", "_.updated"],
+			["util.input2", "_.updated", "_.rs.schema", "_.valid"],
+			["jsonmem.set", "_.params.rsc", "_.params.id", "_.valid", "_.out"],
+			["jsonmem.get", "_.params.rsc", "_.out.i", "_.output"]
 		],
 		"GET/rsc/id": [
-			["jsonmem.get", "_.params.rcs", "_.params.id", "_.output"]
+			["jsonmem.get", "_.params.rsc", "_.params.id", "_.output"]
 		],
 		"DELETE/rsc/id": [
-			["jsonmem.hide", "_.params.rcs", "_.params.id"],
-			["jsonmem.get", "_.params.rcs", "_.params.id", "_.output"]
+			["jsonmem.hide", "_.params.rsc", "_.params.id"],
+			["jsonmem.get", "_.params.rsc", "_.params.id", "_.output"]
 		],
 		"/1.0/health": [
 			[["web.output", "text/plain", "text"], "_.res", "hello"],
