@@ -1,12 +1,12 @@
 {
 	"mod": [{
 		"id": "web",
-		"mod": "./mod/web",
+		"mod": "web",
 		"host": "127.0.0.1",
 		"port": 1337
 	},{
 		"id": "db",
-		"mod": "./mod/json_mem",
+		"mod": "json_mem",
 		"meta": {
 			"type": "object",
 			"spec": {
@@ -20,13 +20,10 @@
 		}
 	},{
 		"id": "timer",
-		"mod": "./mod/timer"
+		"mod": "timer"
 	},{
 		"id": "util",
-		"mod": "./mod/util"
-	},{
-		"id": "jsonmem",
-		"mod": "./mod/json_mem"
+		"mod": "util"
 	}],
 	"spec": {
 		"grouping": [["index", "csv"], ["range", "start", "end"]],
@@ -79,37 +76,35 @@
 		}
 	},
 	"routes": {
-		"": [
-		],
 		"* * * * * *": [
 			["util.log", "hello"]
 		],
 		"POST/rsc": [
 			["web.bodyParser", "_.req", "_.input"],
 			["util.input2", "_.input", "_.rs.schema", "_.valid"],
-			["jsonmem.set", "_.params.rsc", null, "_.valid", "_.out"],
-			["jsonmem.get", "_.params.rsc", "_.out.i", "_.output"],
+			["db.set", "_.params.rsc", null, "_.valid", "_.out"],
+			["db.get", "_.params.rsc", "_.out.i", "_.output"],
 			["util.push", "_.output", "_.:output"]
 		],
 		"GET/rsc": [
 			["util.group", "_.url.query", "@.spec.grouping", "_.query"],
 			["util.input2", "_.query", "@.spec.query","_.meta"],
-			["jsonmem.find", "_.params.rsc", "_.meta", "_.:output"]
+			["db.find", "_.params.rsc", "_.meta", "_.:output"]
 		],
 		"PUT/rsc/id": [
 			["web.bodyParser", "_.req", "_.input"],
-			["jsonmem.get", "_.params.rsc", "_.params.id", "_.origin"],
+			["db.get", "_.params.rsc", "_.params.id", "_.origin"],
 			["util.extend", "_.origin.d", "_.input", "_.updated"],
 			["util.input2", "_.updated", "_.rs.schema", "_.valid"],
-			["jsonmem.set", "_.params.rsc", "_.params.id", "_.valid", "_.out"],
-			["jsonmem.get", "_.params.rsc", "_.out.i", "_.output"]
+			["db.set", "_.params.rsc", "_.params.id", "_.valid", "_.out"],
+			["db.get", "_.params.rsc", "_.out.i", "_.output"]
 		],
 		"GET/rsc/id": [
-			["jsonmem.get", "_.params.rsc", "_.params.id", "_.output"]
+			["db.get", "_.params.rsc", "_.params.id", "_.output"]
 		],
 		"DELETE/rsc/id": [
-			["jsonmem.hide", "_.params.rsc", "_.params.id"],
-			["jsonmem.get", "_.params.rsc", "_.params.id", "_.output"]
+			["db.hide", "_.params.rsc", "_.params.id"],
+			["db.get", "_.params.rsc", "_.params.id", "_.output"]
 		],
 		"/1.0/health": [
 			[["web.output", "text/plain", "text"], "_.res", "hello"],

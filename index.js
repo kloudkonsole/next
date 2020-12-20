@@ -2,12 +2,13 @@ const args = require('pico-args')
 const book = require('./src/book')
 const pipeline = require('./src/pipeline')
 
-const options = args.parse({
-	service: ['service/logistic/index', 'service json script'],
+const opt = args.parse({
+	dir: ['service/', 'service directory'],
+	d: '@dir',
+	service: ['sample/index', 'json script'],
 	s: '@service'
 })
-
-book.open(options.service, (err, service) => {
+book.open(opt.dir + opt.service, (err, service) => {
 	if (err) throw err
 	pipeline.run(service)
 })
