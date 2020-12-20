@@ -16,7 +16,6 @@
         "array-bracket-newline": "error",
         "array-bracket-spacing": "error",
         "array-callback-return": "error",
-        "array-element-newline": "error",
         "arrow-body-style": "error",
         "arrow-parens": [
             "error",
@@ -121,7 +120,6 @@
         "no-div-regex": "error",
         "no-duplicate-imports": "error",
         "no-else-return": "error",
-        "no-eq-null": "error",
         "no-eval": "error",
         "no-extend-native": "error",
         "no-extra-bind": "error",
@@ -194,7 +192,6 @@
 		],
         "no-undef-init": "error",
         "no-undefined": "error",
-        "no-underscore-dangle": "error",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "error",
 		"no-unreachable": "warn",
@@ -293,10 +290,6 @@
         "vars-on-top": "error",
         "wrap-iife": "error",
         "wrap-regex": "error",
-        "yield-star-spacing": "error",
-        "yoda": [
-            "error",
-            "never"
-        ]
+        "yield-star-spacing": "error"
     }
 }

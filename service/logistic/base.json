@@ -28,30 +28,6 @@
 		"id": "jsonmem",
 		"mod": "./mod/json_mem"
 	}],
-	"rsc": {
-		"users": {
-			"meta": {
-			},
-			"schema": {
-				"type": "object",
-				"spec": {
-					"name": {
-						"type": "array",
-						"gt": 0,
-						"spec": "string"
-					},
-					"ccode": "number",
-					"mobile": "number",
-					"email": "string",
-					"address": {
-						"type": "array",
-						"gt": 0,
-						"spec": "string"
-					}
-				}
-			}
-		}
-	},
 	"spec": {
 		"grouping": [["index", "csv"], ["range", "start", "end"]],
 		"params": {
@@ -103,6 +79,8 @@
 		}
 	},
 	"routes": {
+		"": [
+		],
 		"* * * * * *": [
 			["util.log", "hello"]
 		],
