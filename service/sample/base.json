@@ -1,0 +1,128 @@
+{
+	"mod": [{
+		"id": "web",
+		"mod": "web",
+		"host": "127.0.0.1",
+		"port": 1337
+	},{
+		"id": "db",
+		"mod": "json_mem",
+		"meta": {
+			"type": "object",
+			"spec": {
+				"i": "number",
+				"s": "number",
+				"cat": "number",
+				"uat": "date",
+				"cby": "number",
+				"uby": "date"
+			}
+		}
+	},{
+		"id": "timer",
+		"mod": "timer"
+	},{
+		"id": "util",
+		"mod": "util"
+	}],
+	"spec": {
+		"grouping": [["index", "csv"], ["range", "start", "end"]],
+		"params": {
+			"type": "object",
+			"spec": {
+				"rsc": {
+					"type": "string",
+					"required": 1
+				},
+				"id": "number"
+			}
+		},
+		"query": {
+			"type": "object",
+			"required": 1,
+			"spec": {
+				"page": "number",
+				"size": "number",
+				"sort": "string",
+				"q": "string",
+				"group": {
+					"type": "array",
+					"sep": "~",
+					"spec": {
+						"type": "object",
+						"spec": {
+							"include": {
+								"type": "array"
+							},
+							"range": "string",
+							"start": {
+								"type": "null",
+								"required": ["bool", ["range"]]
+							},
+							"end": {
+								"type": "null",
+								"required": ["bool", ["range"]]
+							},
+							"index": "string",
+							"csv": {
+								"type": "array",
+								"sep": "~",
+								"required": ["bool", ["index"]]
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"routes": {
+		"": [
+			["util.spawn", "@.rsc.users.schema", 10, "_.:user"],
+			["db.sets", "users", null, "_.:user", "_.:output"]
+		],
+		"* * * * * *": [
+			["util.log", "1min"]
+		],
+		"POST/rsc": [
+			["web.bodyParser", "_.req", "_.input"],
+			["util.input2", "_.input", "_.rs.schema", "_.valid"],
+			["db.set", "_.params.rsc", null, "_.valid", "_.out"],
+			["db.get", "_.params.rsc", "_.out.i", "_.output"],
+			["util.push", "_.output", "_.:output"]
+		],
+		"GET/rsc": [
+			["util.group", "_.url.query", "@.spec.grouping", "_.query"],
+			["util.input2", "_.query", "@.spec.query","_.meta"],
+			["db.find", "_.params.rsc", "_.meta", "_.:output"]
+		],
+		"PUT/rsc/id": [
+			["web.bodyParser", "_.req", "_.input"],
+			["db.get", "_.params.rsc", "_.params.id", "_.origin"],
+			["util.extend", "_.origin.d", "_.input", "_.updated"],
+			["util.input2", "_.updated", "_.rs.schema", "_.valid"],
+			["db.set", "_.params.rsc", "_.params.id", "_.valid", "_.out"],
+			["db.get", "_.params.rsc", "_.out.i", "_.output"]
+		],
+		"GET/rsc/id": [
+			["db.get", "_.params.rsc", "_.params.id", "_.output"]
+		],
+		"DELETE/rsc/id": [
+			["db.hide", "_.params.rsc", "_.params.id"],
+			["db.get", "_.params.rsc", "_.params.id", "_.output"]
+		],
+		"/1.0/health": [
+			[["web.output", "text/plain", "text"], "_.res", "hello"],
+			["util.wait", 5]
+		],
+		"/1.0/:rsc": [
+			[["web.output"], "_.res", "_.:output", "_.meta"],
+			["util.input2", "$.params", "@.spec.params", "_.params"],
+			[["web.router", "@.rsc"], "_.req.method", "_.params"]
+		],
+		"/1.0/:rsc/:id": [
+			[["web.output"], "_.res", "_.output", "_.meta"],
+			["util.input2", "$.params", "@.spec.params", "_.params"],
+			[["web.router", "@.rsc"], "_.req.method", "_.params"]
+		]
+	}
+} 

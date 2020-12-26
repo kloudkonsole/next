@@ -1,16 +1,25 @@
 {
   "name": "stub",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"start": "node index.js"
+    "start": "node index.js -s sample/index",
+    "lint": "eslint .  --ext .json,.js",
+    "lint:fix": "eslint .  --ext .json,.js --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "pico-common": "^0.14.4"
+    "pico-args": "^1.0.13",
+    "pico-common": "^0.14.10",
+    "randexp": "^0.5.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.16.0",
+    "eslint-plugin-jsdoc": "^30.7.9",
+    "eslint-plugin-json": "^2.1.2"
   }
 }

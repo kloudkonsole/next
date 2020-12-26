@@ -1,0 +1,41 @@
+{
+	"rsc": {
+		"users": {
+			"meta": {
+			},
+			"seed": [
+			],
+			"schema": {
+				"type": "object",
+				"spec": {
+					"name": {
+						"type": "array",
+						"gt": 0,
+						"lt": 5,
+						"spec": "string"
+					},
+					"ccode": {
+						"type": "number",
+						"gt": 0,
+						"lt": 1000
+					},
+					"mobile": {
+						"type": "number",
+						"gt": 60000000,
+						"lt": 100000000
+					},
+					"email": {
+						"type": "string",
+						"regex": "^([a-z]\\w{3,32})@([a-z]\\w{3,16})\\.([a-z]\\w{1,2})$"
+					},
+					"address": {
+						"type": "array",
+						"gt": 0,
+						"lt": 5,
+						"spec": "string"
+					}
+				}
+			}
+		}
+	}
+} 
