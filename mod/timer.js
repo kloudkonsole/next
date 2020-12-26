@@ -10,7 +10,7 @@ const pTime = require('pico-common').export('pico/time')
  */
 function timeout(host, path, parsed){
 	host.go(path)
-	return setTimeout(timeout, pTime.nearest(...parsed, Date.now()), host, path, parsed)
+	return setTimeout(timeout, pTime.nearest(...parsed, Date.now()) - Date.now(), host, path, parsed)
 }
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
 		return paths.forEach(p => {
 			const parsed = pTime.parse(p)
 			if (!parsed) return
-//			setTimeout(timeout, pTime.nearest(...parsed, now), host, p, parsed)
+			setTimeout(timeout, pTime.nearest(...parsed, now) - now, host, p, parsed)
 		})
 	}
 }

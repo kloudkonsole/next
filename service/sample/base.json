@@ -76,8 +76,12 @@
 		}
 	},
 	"routes": {
+		"": [
+			["util.spawn", "@.rsc.users.schema", 10, "_.:user"],
+			["db.sets", "users", null, "_.:user", "_.:output"]
+		],
 		"* * * * * *": [
-			["util.log", "hello"]
+			["util.log", "1min"]
 		],
 		"POST/rsc": [
 			["web.bodyParser", "_.req", "_.input"],

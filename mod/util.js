@@ -1,4 +1,5 @@
 const pObj = require('pico-common').export('pico/obj')
+const randexp = require('randexp').randexp
 
 /**
  * group object's array to array objects
@@ -77,6 +78,13 @@ module.exports = {
 
 	push(item, array){
 		array.push(item)
+		return this.next()
+	},
+
+	spawn(schema, count, output){
+		for(let i = 0; i < count; i++){
+			output.push(pObj.create(schema, randexp))
+		}
 		return this.next()
 	}
 }

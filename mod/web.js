@@ -9,12 +9,12 @@ const CREATE_BODY = (body, meta) => JSON.stringify(Object.assign({}, meta, {body
 module.exports = {
 
 	setup(host, cfg, rsc, paths){
-		const proxy = http.createServer((req, res) => {
+		const proxy = http.createServer(async (req, res) => {
 			const url = URL.parse(req.url, 1)
-			const err = host.go(url.pathname, {req, res, url})
-			if (err.charAt) {
+			const err = await host.go(url.pathname, {req, res, url})
+			if (err) {
 				res.statusCode = 404
-				return res.end(err)
+				return res.end(err.charAt ? err : JSON.stringify(err))
 			}
 		})
 

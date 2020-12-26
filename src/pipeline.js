@@ -24,14 +24,14 @@ function _host(radix, service, libs, routes){
 	 * @param {object} [data = this.data] - data use in current pipeline
 	 * @returns {void} - no returns
 	 */
-	async function next(err, named, data = this.data){
+	async function next(err, named, data = this.data || {}){
 		if (err) throw err
-		if (named) {
+		if (null != named) {
 			const params = {}
 			const key = radix.match(named, params)
 			const route = routes[key]
 			if (!route) return 'not found'
-			return next.call(Object.assign({}, libs, {params, next, route, data, ptr: 0}), null, null, data)
+			return next.call(Object.assign({}, libs, {params, next, route, data, ptr: 0}))
 		}
 
 		const middleware = this.route[this.ptr++]
@@ -158,5 +158,7 @@ module.exports = {
 				mws.push(route)
 			})
 		})
+
+		host.go('')
 	}
 }

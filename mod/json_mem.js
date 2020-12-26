@@ -62,14 +62,29 @@ module.exports = {
 			return acc
 		}, {})
 	},
-	set(name, i, input, output){
+	set(name, id, input, output){
 		const col = this[KEY][name]
-		if (i){
-			col.update(i, input)
-			Object.assign(output, {i})
+		if (id){
+			col.update(id, input)
+			Object.assign(output, {id})
 		}else{
 			const res = col.insert(input)
 			Object.assign(output, res)
+		}
+		return this.next()
+	},
+	sets(name, ids, inputs, outputs){
+		const col = this[KEY][name]
+		if (ids){
+			ids.forEach((id, i) => {
+				col.update(id, input[i])
+				outputs.push({id})
+			})
+		}else{
+			inputs.forEach(input => {
+				const res = col.insert(input)
+				outputs.push(res)
+			})
 		}
 		return this.next()
 	},
