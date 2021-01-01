@@ -76,6 +76,8 @@ function _host(radix, service, libs, routes){
 	return {
 		go(url, data){
 			return next(null, url, data)
+		},
+		listen(mod, filter, instance){
 		}
 	}
 }
