@@ -3,8 +3,13 @@
 		"so": {
 			"meta": {
 			},
-			"seed": [
-			],
+			"ref": {
+				"org": "org",
+				"send_by": "user",
+				"receive_by": "user",
+				"carrier": "carrier"
+			},
+			"child": ["so_line"],
 			"schema": {
 				"type": "object",
 				"required": 1,
@@ -20,9 +25,7 @@
 						"lt": 32
 					},
 					"state": {
-						"type": "string",
-						"gt": 2,
-						"lt": 4
+						"type": ["CAN", "CFM", "PAR", "COM"]
 					},
 					"own_by": {
 						"type": "number"
@@ -51,11 +54,21 @@
 						"gt": 0,
 						"lt": 5,
 						"spec": "string"
+					},
+					"so_line": {
+						"type": "array",
+						"gt": 0,
+						"lt": 16,
+						"spec": ["ref", ["_", "so_line"]]
 					}
 				}
 			}
 		},
 		"so_line": {
+			"ref": {
+				"so": "so",
+				"sku": "sku"
+			},
 			"schema": {
 				"type": "object",
 				"required": 1,
@@ -64,7 +77,7 @@
 						"type": "number",
 						"required": 1
 					},
-					"product": {
+					"sku": {
 						"type": "number"
 					},
 					"line": {
@@ -82,4 +95,4 @@
 			}
 		}
 	}
-} 
+}

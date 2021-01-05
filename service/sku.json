@@ -1,0 +1,101 @@
+{
+	"rsc": {
+		"org": {
+			"map": {
+				"member": "user"
+			},
+			"schema": {
+				"type": "object",
+				"required": 1,
+				"spec": {
+					"id": {
+						"type": "string",
+						"gt": 8,
+						"lt": 16
+					},
+					"name": {
+						"type": "string",
+						"gt": 4,
+						"lt": 32
+					},
+					"member": {
+						"type": "array",
+						"spec": ["ref", ["_", "user"]]
+					},
+					"state": {
+						"type": [0, 1]
+					}
+				}
+			}
+		},
+		"sku": {
+			"ref": {
+				"org": "org"
+			},
+			"schema": {
+				"type": "object",
+				"required": 1,
+				"spec": {
+					"id": {
+						"type": "string",
+						"gt": 8,
+						"lt": 16
+					},
+					"ref": {
+						"type": "string",
+						"gt": 4,
+						"lt": 32
+					},
+					"state": {
+						"type": [0, 1]
+					},
+					"org": {
+						"type": "number"
+					}
+				}
+			}
+		},
+		"carrier": {
+			"map": {
+				"delivery_method": "delivery_method"
+			},
+			"schema": {
+				"type": "object",
+				"required": 1,
+				"spec": {
+					"id": {
+						"type": "string",
+						"gt": 8,
+						"lt": 16
+					},
+					"name": {
+						"type": "string"
+					},
+					"delivery_method": {
+						"type": "array",
+						"spec": ["ref", ["_", "delivery_method"]]
+					}
+				}
+			}
+		},
+		"delivery_method": {
+			"map": {
+				"delivery_method": "delivery_method"
+			},
+			"schema": {
+				"type": "object",
+				"required": 1,
+				"spec": {
+					"id": {
+						"type": "string",
+						"gt": 8,
+						"lt": 16
+					},
+					"name": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}
