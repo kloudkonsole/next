@@ -38,7 +38,7 @@
 						"required": 1
 					},
 					"ship_at": {
-						"type": "datetome",
+						"type": "date",
 						"required": 1
 					},
 					"delivery_method": {

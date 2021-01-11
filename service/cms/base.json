@@ -31,7 +31,7 @@
 		"": [
 			["util.add", "@.rsc.so_line.schema", "so_line", "_.ext"],
 			["util.spawn", "@.rsc.so.schema", "_.ext", 10, "_.:so"],
-			["db.sets", "so", null, "_.:so", "_.:output"]
+			["db.set", "so", null, "_.:so", "_.:output"]
 		]
 	}
 } 

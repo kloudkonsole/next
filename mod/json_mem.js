@@ -1,3 +1,4 @@
+const pObj = require('pico-common').export('pico/obj')
 let KEY
 
 /**
@@ -6,7 +7,7 @@ let KEY
  * @param {object} host - host object
  * @returns {object} - this
  */
-function Database(){
+function Database(host){
 	this.host = host
 	this.colls = {}
 }
@@ -36,7 +37,7 @@ function Collection(db, meta, rs){
 	this.schema = Object.assign({}, rs.schema)
 	this.map = Object.assign({}, rs.map)
 	this.ref = Object.assign({}, rs.ref)
-	this.child = Object.assign({}, rs.child)
+	this.child = rs.child ? rs.child.slice() : void 0
 }
 
 Collection.prototype = {
@@ -52,10 +53,9 @@ Collection.prototype = {
 		const res = pObj.validate(this.schema, input, d)
 		if (res) throw 'invalid parameter: ' + res
 
-		Object.keys(this.child).forEach(key => {
-			const child = this.child[key]
-			this.db[key].insert(Object.assign({[child[1]]: i}, d[child[0]]))
-			delete d[child[0]]
+		this.child.forEach(child => {
+			this.db.getColl(child).insert(Object.assign({[child]: i}, d[child]))
+			delete d[child]
 		})
 
 		this.documents.push(Object.assign(meta, {d}))
@@ -111,6 +111,13 @@ function sets(coll, ids, inputs, outputs){
 	return this.next()
 }
 
+function getColl(ctx, dbName, collName){
+	const db = ctx[dbName]
+	const coll = db.getColl(collName)
+	if (!coll) throw `Invalid ${dbName} ${collName}`
+	return coll
+}
+
 module.exports = {
 	setup(host, cfg, rsc, paths){
 		KEY = cfg.id
@@ -123,7 +130,7 @@ module.exports = {
 		}, new Database(host))
 	},
 	set(name, id, input, output){
-		const coll = this[KEY][name]
+		const coll = getColl(this, KEY, name)
 		if (Array.isArray(input)){
 			sets(coll, id, input, output)
 		}else{
@@ -132,18 +139,18 @@ module.exports = {
 		return this.next()
 	},
 	get(name, id, output){
-		const col = this[KEY][name]
+		const coll = getColl(this, KEY, name)
 		const res = col.select({index: 'i', csv: [id]})
 		Object.assign(output, res[0])
 		return this.next()
 	},
 	find(name, query, output){
-		const col = this[KEY][name]
+		const coll = getColl(this, KEY, name)
 		output.push(...col.select(query))
 		return this.next()
 	},
 	hide(name, id){
-		const col = this[KEY][name]
+		const coll = getColl(this, KEY, name)
 		col.remove(id)
 		return this.next()
 	}
