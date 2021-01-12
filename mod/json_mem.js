@@ -53,10 +53,17 @@ Collection.prototype = {
 		const res = pObj.validate(this.schema, input, d)
 		if (res) throw 'invalid parameter: ' + res
 
-		this.child.forEach(child => {
-			this.db.getColl(child).insert(Object.assign({[child]: i}, d[child]))
-			delete d[child]
-		})
+		if (Array.isArray(this.child)){
+			this.child.forEach(childName => {
+				const child = d[childName]
+				if (Array.isArray(child)){
+					child.forEach(c => this.db.getColl(childName).insert(Object.assign({[childName]: i}, c)))
+				}else{
+					this.db.getColl(childName).insert(Object.assign({[childName]: i}, child))
+				}
+				delete d[childName]
+			})
+		}
 
 		this.documents.push(Object.assign(meta, {d}))
 		return meta
@@ -93,7 +100,6 @@ function set(coll, id, input, output){
 		const res = coll.insert(input)
 		Object.assign(output, res)
 	}
-	return this.next()
 }
 
 function sets(coll, ids, inputs, outputs){
@@ -108,7 +114,6 @@ function sets(coll, ids, inputs, outputs){
 			outputs.push(res)
 		})
 	}
-	return this.next()
 }
 
 function getColl(ctx, dbName, collName){

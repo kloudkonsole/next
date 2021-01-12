@@ -72,6 +72,7 @@
 			"schema": {
 				"type": "object",
 				"required": 1,
+				"notnull": 1,
 				"spec": {
 					"so": {
 						"type": "number",
