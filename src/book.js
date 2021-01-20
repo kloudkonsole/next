@@ -8,6 +8,9 @@ const EXT = '.json'
 
 let CWD
 
+/**
+ * @param cb
+ */
 function getWD(cb){
 	if (CWD) return cb(CWD)
 	fs.readlink(symPath, (err, realPath) => {
@@ -17,10 +20,20 @@ function getWD(cb){
 	})
 }
 
+/**
+ * @param wd
+ * @param file
+ */
 function getPath(wd, file){
 	return path.resolve(wd, file) + EXT
 }
 
+/**
+ * @param wd
+ * @param fnames
+ * @param list
+ * @param cb
+ */
 function readPages(wd, fnames, list, cb){
 	if (!fnames.length) return cb(null, list)
 
@@ -31,10 +44,15 @@ function readPages(wd, fnames, list, cb){
 	})
 }
 
+/**
+ * @param wd
+ * @param index
+ * @param cb
+ */
 function readBook(wd, index, cb){
 	readPages(wd, [index], [], (err, res) => {
 		if (err) return cb(err)
-		if (!res.length) return cb('not found: ' + index)
+		if (!res.length) return cb(`not found: ${index}`)
 		readPages(wd, res[0], [], cb)
 	})
 }

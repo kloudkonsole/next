@@ -51,7 +51,7 @@ Collection.prototype = {
 		}
 		const d = {}
 		const res = pObj.validate(this.schema, input, d)
-		if (res) throw 'invalid parameter: ' + res
+		if (res) throw `invalid parameter: ${res}`
 
 		if (Array.isArray(this.child)){
 			this.child.forEach(childName => {
@@ -92,6 +92,12 @@ Collection.prototype = {
 	}
 }
 
+/**
+ * @param coll
+ * @param id
+ * @param input
+ * @param output
+ */
 function set(coll, id, input, output){
 	if (id){
 		coll.update(id, input)
@@ -102,6 +108,12 @@ function set(coll, id, input, output){
 	}
 }
 
+/**
+ * @param coll
+ * @param ids
+ * @param inputs
+ * @param outputs
+ */
 function sets(coll, ids, inputs, outputs){
 	if (ids){
 		ids.forEach((id, i) => {
@@ -116,6 +128,11 @@ function sets(coll, ids, inputs, outputs){
 	}
 }
 
+/**
+ * @param ctx
+ * @param dbName
+ * @param collName
+ */
 function getColl(ctx, dbName, collName){
 	const db = ctx[dbName]
 	const coll = db.getColl(collName)
@@ -145,18 +162,18 @@ module.exports = {
 	},
 	get(name, id, output){
 		const coll = getColl(this, KEY, name)
-		const res = col.select({index: 'i', csv: [id]})
+		const res = coll.select({index: 'i', csv: [id]})
 		Object.assign(output, res[0])
 		return this.next()
 	},
 	find(name, query, output){
 		const coll = getColl(this, KEY, name)
-		output.push(...col.select(query))
+		output.push(...coll.select(query))
 		return this.next()
 	},
 	hide(name, id){
 		const coll = getColl(this, KEY, name)
-		col.remove(id)
+		coll.remove(id)
 		return this.next()
 	}
 }

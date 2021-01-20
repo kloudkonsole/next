@@ -1,0 +1,15 @@
+{
+	"mod": [{
+		"id": "cmsCli",
+		"mod": "ajax",
+		"host": "127.0.0.1",
+		"port": 1337
+	}],
+	"spec": {
+	},	
+	"routes": {
+		"": [
+			[["cmsCli.poll", "GET", "http://localhost:1337/1.0/health"]]
+		]
+	}
+} 

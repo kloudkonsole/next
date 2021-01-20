@@ -14,6 +14,12 @@ const SRC_DATA = '_'
 const TYPE_ARR = ':'
 const SEP = '.'
 
+/**
+ * @param radix
+ * @param service
+ * @param libs
+ * @param routes
+ */
 function _host(radix, service, libs, routes){
 
 	/**
@@ -94,7 +100,7 @@ module.exports = {
 		service.mod.forEach(cfg => {
 			const id = cfg.id
 			if (!id || KEYWORDS.includes(id)) throw `invalid id [${id}]`
-			const mod = require('../mod/' + cfg.mod)
+			const mod = require(`../mod/${cfg.mod}`)
 			Object.assign(libs, {[id]: mod.setup(host, cfg, service.rsc, paths)})
 			mods[id] = mod
 		})

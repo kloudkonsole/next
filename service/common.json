@@ -58,7 +58,7 @@
 			["util.input2", "_.input", "_.rs.schema", "_.valid"],
 			["db.set", "_.params.rsc", null, "_.valid", "_.out"],
 			["db.get", "_.params.rsc", "_.out.i", "_.output"],
-			["util.push", "_.output", "_.:output"]
+			["util.push", "_.:output", "_.output"]
 		],
 		"GET/rsc": [
 			["util.group", "_.url.query", "@.spec.grouping", "_.query"],
@@ -68,7 +68,8 @@
 		"PUT/rsc/id": [
 			["web.bodyParser", "_.req", "_.input"],
 			["db.get", "_.params.rsc", "_.params.id", "_.origin"],
-			["util.extend", "_.origin.d", "_.input", "_.updated"],
+			["util.push", "_.:array", "_.input", "_.updated"],
+			[["util.lib", "pico/obj", "extends"], "_.origin.d", "_.array"],
 			["util.input2", "_.updated", "_.rs.schema", "_.valid"],
 			["db.set", "_.params.rsc", "_.params.id", "_.valid", "_.out"],
 			["db.get", "_.params.rsc", "_.out.i", "_.output"]
