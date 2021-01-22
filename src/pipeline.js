@@ -15,10 +15,14 @@ const TYPE_ARR = ':'
 const SEP = '.'
 
 /**
- * @param radix
- * @param service
- * @param libs
- * @param routes
+ * _host class
+ *
+ * @param {object} radix - radix mmapping object for routing
+ * @param {object} service - loaded services/config from spec
+ * @param {object} libs - loaded lib/module from spec
+ * @param {object} routes - middleware routes
+ *
+ * @returns {void} - this
  */
 function _host(radix, service, libs, routes){
 

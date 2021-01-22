@@ -13,7 +13,7 @@ module.exports = {
 			const url = URL.parse(req.url, 1)
 			const err = await host.go(url.pathname, {req, res, url})
 			if (err) {
-				res.statusCode = 404
+				res.statusCode = 404 // eslint-disable-line require-atomic-updates
 				return res.end(err.charAt ? err : JSON.stringify(err))
 			}
 		})

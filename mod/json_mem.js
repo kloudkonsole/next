@@ -5,7 +5,8 @@ let KEY
  * Database class
  *
  * @param {object} host - host object
- * @returns {object} - this
+ *
+ * @returns {void} - this
  */
 function Database(host){
 	this.host = host
@@ -27,7 +28,8 @@ Database.prototype = {
  * @param {Database} db - database object
  * @param {object} meta - meta object
  * @param {object} rs - resource
- * @returns {object} - this
+ *
+ * @returns {void} - this
  */
 function Collection(db, meta, rs){
 	this.db = db
@@ -93,10 +95,14 @@ Collection.prototype = {
 }
 
 /**
- * @param coll
- * @param id
- * @param input
- * @param output
+ * Set single record into collection
+ *
+ * @param {Collection} coll - Collection instance
+ * @param {string} id - identity of the record, can be string or number
+ * @param {object} input - record to be set
+ * @param {object} output - result of the set
+ *
+ * @returns {void} - undefined
  */
 function set(coll, id, input, output){
 	if (id){
@@ -109,15 +115,19 @@ function set(coll, id, input, output){
 }
 
 /**
- * @param coll
- * @param ids
- * @param inputs
- * @param outputs
+ * Set multiple records into collection
+ *
+ * @param {Collection} coll - Collection instance
+ * @param {Array} ids - array of identity of the record, can be string or number
+ * @param {Array} inputs - records to be set
+ * @param {Array} outputs - results of the sets
+ *
+ * @returns {void} - undefined
  */
 function sets(coll, ids, inputs, outputs){
 	if (ids){
 		ids.forEach((id, i) => {
-			coll.update(id, input[i])
+			coll.update(id, inputs[i])
 			outputs.push({id})
 		})
 	}else{
@@ -129,9 +139,13 @@ function sets(coll, ids, inputs, outputs){
 }
 
 /**
- * @param ctx
- * @param dbName
- * @param collName
+ * Get Collection by database name and collection name
+ *
+ * @param {object} ctx - context object
+ * @param {string} dbName - name of database that contain the interested collection
+ * @param {string} collName - name of the collection
+ *
+ * @returns {Collection} - Collection instance
  */
 function getColl(ctx, dbName, collName){
 	const db = ctx[dbName]

@@ -248,7 +248,7 @@
             "single"
         ],
         "radix": "error",
-        "require-atomic-updates": "error",
+        "require-atomic-updates": "warn",
         "require-await": "error",
         "require-jsdoc": "off",
         "require-unicode-regexp": "error",

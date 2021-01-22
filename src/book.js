@@ -9,7 +9,11 @@ const EXT = '.json'
 let CWD
 
 /**
- * @param cb
+ * Get current working directory
+ *
+ * @param {Function} cb - call back
+ *
+ * @returns {void} - undefined
  */
 function getWD(cb){
 	if (CWD) return cb(CWD)
@@ -21,18 +25,26 @@ function getWD(cb){
 }
 
 /**
- * @param wd
- * @param file
+ * Get resolved path with working directory, file name and default extension
+ *
+ * @param {string} wd - working directory
+ * @param {string} file - filename
+ *
+ * @returns {string} - file path
  */
 function getPath(wd, file){
 	return path.resolve(wd, file) + EXT
 }
 
 /**
- * @param wd
- * @param fnames
- * @param list
- * @param cb
+ * Read multiple files and place the into a list
+ *
+ * @param {string} wd - working directory
+ * @param {Array} fnames - a list of filenames
+ * @param {Array} list - a list of file
+ * @param {Function} cb - callback
+ *
+ * @returns {void} - undefined
  */
 function readPages(wd, fnames, list, cb){
 	if (!fnames.length) return cb(null, list)
@@ -45,9 +57,13 @@ function readPages(wd, fnames, list, cb){
 }
 
 /**
- * @param wd
- * @param index
- * @param cb
+ * Read files listed in an index file
+ *
+ * @param {string} wd - working diretory
+ * @param {string} index - index file name
+ * @param {Function} cb - callback
+ *
+ * @returns {void} - undefined
  */
 function readBook(wd, index, cb){
 	readPages(wd, [index], [], (err, res) => {
