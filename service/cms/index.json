@@ -1,6 +1,6 @@
 [
-	"base",
-	"../common",
-	"../ums",
-	"../so"
+	"base.json",
+	"../common.json",
+	"../ums.json",
+	"../so.json"
 ]

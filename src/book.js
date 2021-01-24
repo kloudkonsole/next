@@ -1,10 +1,10 @@
 const fs = require('fs')
 const path = require('path')
-const pObj = require('pico-common').export('pico/obj')
+const pico = require('pico-common')
+const pObj = pico.export('pico/obj')
 const symPath = process.argv[1]
 
 const fopt = {encoding: 'utf8'}
-const EXT = '.json'
 
 let CWD
 
@@ -33,7 +33,7 @@ function getWD(cb){
  * @returns {string} - file path
  */
 function getPath(wd, file){
-	return path.resolve(wd, file) + EXT
+	return path.resolve(wd, file)
 }
 
 /**
@@ -49,10 +49,14 @@ function getPath(wd, file){
 function readPages(wd, fnames, list, cb){
 	if (!fnames.length) return cb(null, list)
 
-	fs.readFile(getPath(wd, fnames.shift()), fopt, (err, json) => {
+	const fpath = getPath(wd, fnames.shift())
+	fs.readFile(fpath, fopt, (err, txt) => {
 		if (err) return cb(err)
-		list.push(JSON.parse(json))
-		readPages(wd, fnames, list, cb)
+		pico.parse(fpath, txt, (err, mod) => {
+			if (err) return cb(err)
+			list.push(mod)
+			readPages(wd, fnames, list, cb)
+		})
 	})
 }
 

@@ -11,20 +11,20 @@ const KEYWORDS = [
 const SRC_SPEC = '@'
 const SRC_CTX = '$'
 const SRC_DATA = '_'
+
 const TYPE_ARR = ':'
 const SEP = '.'
 
 /**
  * _host class
  *
- * @param {object} radix - radix mmapping object for routing
- * @param {object} service - loaded services/config from spec
+ * @param {object} radix - radix tree for routing
  * @param {object} libs - loaded lib/module from spec
  * @param {object} routes - middleware routes
  *
  * @returns {void} - this
  */
-function _host(radix, service, libs, routes){
+function _host(radix, libs, routes){
 
 	/**
 	 * Forward to next middelware
@@ -52,9 +52,6 @@ function _host(radix, service, libs, routes){
 
 			let src
 			switch(key[0]){
-			case SRC_SPEC:
-				src = service
-				break
 			case SRC_CTX:
 				src = this
 				break
@@ -99,7 +96,7 @@ module.exports = {
 		const libs = {}
 		const routes = {}
 		const paths = Object.keys(service.routes)
-		const host = _host(radix, service, libs, routes)
+		const host = _host(radix, libs, routes)
 
 		service.mod.forEach(cfg => {
 			const id = cfg.id
@@ -127,12 +124,9 @@ module.exports = {
 							params.push(param)
 							return
 						}
-						let p
 						switch(param.charAt(0)){
 						case SRC_SPEC:
-							p = param.split(SEP)
-							p.unshift()
-							params.push(pObj.dot(service, p.slice(1)))
+							params.push(pObj.dot(service, (param.split(SEP)).slice(1)))
 							break
 						default:
 							params.push(param)
@@ -159,8 +153,10 @@ module.exports = {
 					switch(s.charAt(0)){
 					case SRC_DATA:
 					case SRC_CTX:
-					case SRC_SPEC:
 						route.push(s.split(SEP))
+						break
+					case SRC_SPEC:
+						route.push(pObj.dot(service, (s.split(SEP)).slice(1)))
 						break
 					default:
 						route.push(s)

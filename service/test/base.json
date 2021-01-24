@@ -1,15 +1,25 @@
 {
 	"mod": [{
-		"id": "cmsCli",
+		"id": "cms_cli",
 		"mod": "ajax",
 		"host": "127.0.0.1",
 		"port": 1337
+	},{
+		"id": "it",
+		"mod": "it"
+	},{
+		"id": "test",
+		"mod": ".test"
 	}],
 	"spec": {
-	},	
+	},
 	"routes": {
 		"": [
-			[["cmsCli.poll", "GET", "http://localhost:1337/1.0/health"]]
+			[["cms_cli.poll", "GET", "http://localhost:1337/1.0/health"]],
+			["util.goto", "/inbounds/products"]
+		],
+		"/inbounds/products": [
+			["test.parallel", "Products Listing Tests", ["!.test.products"]]
 		]
 	}
 } 
