@@ -102,5 +102,10 @@ module.exports = {
 	add(value, key, output){
 		output[key] = value
 		return this.next()
+	},
+
+	async go(url, data){
+		await this.next(null, url, data)
+		return this.next()
 	}
 }

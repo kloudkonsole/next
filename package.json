@@ -1,12 +1,11 @@
 {
   "name": "stub",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js -s cms/index.json",
-    "start:test": "node index.js -s test/index.json",
+    "test": "node index.js -s test/index.json",
     "lint": "eslint .  --ext .json,.js",
     "lint:fix": "eslint .  --ext .json,.js --fix"
   },
