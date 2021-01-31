@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node run.js -s cms",
+    "start": "node index.js -s cms/index.json",
     "test": "node run.js -s test",
     "lint": "eslint .  --ext .json,.js",
     "lint:fix": "eslint .  --ext .json,.js --fix"

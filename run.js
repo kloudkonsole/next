@@ -16,7 +16,7 @@ pico.run({
 	name: opt.name,
 	ajax: psUtil.ajax,
 	paths: {
-		'@': opt.dir + opt.service
+		'@': opt.dir + opt.service + '/'
 	},
 	env: {
 		pipeline
@@ -25,12 +25,10 @@ pico.run({
 	},
 	importRule: []
 }, () => {
-	const pObj = require('pico/obj')
-	const pipeline = pico.env('pipeline')//define('pipeline', pico.env('pipeline'))
-	const index = require('@/index')
+	const pipeline = define('pipe.line', pico.env('pipeline'))
+	const service = require('@/index')
 
 	return function(){
-		const service = pObj.extend({}, index)
 		pipeline.run(service)
 	}
 })
