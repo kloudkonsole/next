@@ -4,7 +4,7 @@ return {
 	func: {
 		list(ctx){
 			return function(){
-				this.test('ensure json.path work', function(cb){
+				this.test('ensure json.path work', cb => {
 					const json = {
 						store: {
 							book: [
@@ -22,18 +22,19 @@ return {
 						}
 					}
 					let total = 0
-					pjson.path(json)('..','price')((price)=>{
-						total+=price; return price
+					pjson.path(json)('..','price')(price => {
+						total += price; return price
 					})()
 					cb(null, 360 === total)
 				})
-/*
-				this.test('read product list', async function(cb){
-					const out = {}
-					await ctx.go('fetch/products', {page: 1, size: 25}, out)
 
-				})
-*/
+				/*
+				 *This.test('read product list', async function(cb){
+				 *	const out = {}
+				 *	await ctx.go('fetch/products', {page: 1, size: 25}, out)
+				 *
+				 *})
+				 */
 			}
 		}
 	}

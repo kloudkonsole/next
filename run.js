@@ -19,14 +19,14 @@ pico.run({
 		'@': opt.dir + opt.service
 	},
 	env: {
-		pipeline,
+		pipeline
 	},
 	preprocessors: {
 	},
 	importRule: []
-}, function(){
+}, () => {
 	const pObj = require('pico/obj')
-	const pipeline = define('pipeline', pico.getEnv('pipeline')
+	const pipeline = pico.env('pipeline')//define('pipeline', pico.env('pipeline'))
 	const index = require('@/index')
 
 	return function(){
