@@ -16,7 +16,7 @@ pico.run({
 	name: opt.name,
 	ajax: psUtil.ajax,
 	paths: {
-		'@': opt.dir + opt.service + '/'
+		'@': `${opt.dir + opt.service}/`
 	},
 	env: {
 		pipeline

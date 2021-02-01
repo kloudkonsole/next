@@ -13,8 +13,11 @@ function req(method, href, params, opt){
 		psUtil.ajax(method, href, params, opt, (err, state, res) => {
 			if (4 !== state) return
 			if (err) return reject(err)
-			try{ resolve(JSON.parse(res)) }
-			catch(exp){ reject(exp) }
+			try{
+				resolve(JSON.parse(res))
+			} catch(exp){
+				reject(exp)
+			}
 		})
 	})
 }

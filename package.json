@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node index.js -s cms/index.json",
     "test": "node run.js -s test",
-    "lint": "eslint .  --ext .json,.js",
-    "lint:fix": "eslint .  --ext .json,.js --fix"
+    "lint": "eslint .  --ext .js",
+    "lint:fix": "eslint .  --ext .js --fix"
   },
   "keywords": [],
   "author": "",
@@ -18,9 +18,5 @@
     "picos-util": "^0.1.4",
     "randexp": "^0.5.3"
   },
-  "devDependencies": {
-    "eslint": "^7.18.0",
-    "eslint-plugin-jsdoc": "^30.7.13",
-    "eslint-plugin-json": "^2.1.2"
-  }
+  "devDependencies": {}
 }

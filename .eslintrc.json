@@ -4,10 +4,8 @@
         "es2021": true
     },
 	"plugins": [
-		"jsdoc",
-		"json"
 	],
-    "extends": ["eslint:recommended", "plugin:jsdoc/recommended", "plugin:json/recommended"],
+    "extends": ["eslint:recommended"],
     "parserOptions": {
         "ecmaVersion": 12
     },

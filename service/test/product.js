@@ -27,7 +27,7 @@ return {
 				cb(null, 360 === total)
 			})
 
-			this.test('read product list', async function(cb){
+			this.test('read product list', async cb => {
 				const output = []
 				await ctx.next(null, 'fetch/so', {params: {page: 1, size: 25}, output})
 				cb(null, output.body && Array.isArray(output.body))
