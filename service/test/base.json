@@ -20,6 +20,9 @@
 		],
 		"/inbounds/products": [
 			["it.parallel", "Products Listing Tests", "@.func.list"]
+		],
+		"fetch/so": [
+			[["cms_cli.query", "GET", "http://localhost:1337/1.0/so"], "_.params", "_.opt", "_.output"]
 		]
 	}
 } 

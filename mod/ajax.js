@@ -5,16 +5,16 @@ const psUtil = require('picos-util')
  * @param {string} href - network url
  * @param {object} params - request body or query string
  * @param {object} opt - option such as header
- * @param {object} output - store response
  *
  * @returns {Function} - callback
  */
-function req(method, href, params, opt, output){
+function req(method, href, params, opt){
 	return new Promise((resolve, reject) => {
 		psUtil.ajax(method, href, params, opt, (err, state, res) => {
 			if (4 !== state) return
 			if (err) return reject(err)
-			resolve(res)
+			try{ resolve(JSON.parse(res)) }
+			catch(exp){ reject(exp) }
 		})
 	})
 }
@@ -54,7 +54,13 @@ module.exports = {
 			})
 		})
 	},
-	test(){
-		req()
+	query: (method, href) => async function(params, opt, output){
+		try{
+			const res = await req(method, href, params, opt)
+			Object.assign(output, res)
+		}catch(exp){
+			return this.next(exp)
+		}
+		return this.next()
 	}
 }

@@ -27,13 +27,11 @@ return {
 				cb(null, 360 === total)
 			})
 
-			/*
-			 *This.test('read product list', async function(cb){
-			 *	const out = {}
-			 *	await ctx.go('fetch/products', {page: 1, size: 25}, out)
-			 *
-			 *})
-			 */
+			this.test('read product list', async function(cb){
+				const output = []
+				await ctx.next(null, 'fetch/so', {params: {page: 1, size: 25}, output})
+				cb(null, output.body && Array.isArray(output.body))
+			})
 		}
 	}
 }
