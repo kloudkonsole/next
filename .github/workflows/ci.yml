@@ -5,7 +5,7 @@ on: [push]
 jobs:
   checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     strategy:
       matrix:
@@ -21,9 +21,12 @@ jobs:
       run: |
         npm i -g eslint eslint-plugin-json eslint-plugin-jsdoc
         npm run lint
-    - name: Test
+    - name: Bootup
       run: |
         npm ci
+        npm start
+    - name: Test
+      run: |
         npm test
       env:
         CI: true
