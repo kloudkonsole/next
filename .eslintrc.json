@@ -9,6 +9,12 @@
     "parserOptions": {
         "ecmaVersion": 12
     },
+	"globals": {
+		"__": false,
+		"pico": false,
+		"inherit": false,
+		"define": false
+	},
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-newline": "error",
@@ -171,7 +177,6 @@
         "no-script-url": "error",
         "no-self-compare": "error",
         "no-sequences": "error",
-        "no-shadow": "error",
         "no-spaced-func": "error",
         "no-sync": "error",
         "no-tabs": [
