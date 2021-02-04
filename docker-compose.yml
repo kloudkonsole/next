@@ -13,9 +13,6 @@ services:
     working_dir: /opt/stub
     ports:
       - "1337:1337"
-    depends_on:
-      - mysql
-      - redis
     networks:
       - service-network
     restart: unless-stopped
