@@ -1,13 +1,14 @@
-const pObj = require('pico-common').export('pico/obj')
-const randexp = require('randexp').randexp
+const pLib = require('pico-common')
+const pObj = pLib.export('pico/obj')
+const randex = require('randexp').randexp
 
 /**
- * group object's array to array objects
+ * Group object's array to array objects
  *
  * @param {object} input - parsed querystring
- * @param {array} grouping - keys to be group
- * @param {array} output - output array
- * @returns {array} - output array
+ * @param {Array} grouping - keys to be group
+ * @param {Array} output - output array
+ * @returns {Array} - output array
  */
 function groupQuery(input, grouping, output = []){
 	for (let i = 0, keys, val0; (keys = grouping[i]); i++){
@@ -42,8 +43,8 @@ module.exports = {
 	},
 
 	log(...args) {
-		// eslint-disable-next-line no-console
 		for (const a of args){
+			// eslint-disable-next-line no-console
 			console.log(a)
 		}
 		return this.next()
@@ -76,15 +77,35 @@ module.exports = {
 		return this.next()
 	},
 
-	push(item, array){
-		array.push(item)
+	lib: (id, funcName) => {
+		const func = pLib.export(id)[funcName]
+
+		return function(...args){
+			func(...args)
+			return this.next()
+		}
+	},
+
+	push(array, ...item){
+		array.push(...item)
 		return this.next()
 	},
 
-	spawn(schema, count, output){
+	spawn(schema, ext, count, output){
+		const opt = Object.assign({randex}, ext)
 		for(let i = 0; i < count; i++){
-			output.push(pObj.create(schema, randexp))
+			output.push(pObj.create(schema, opt))
 		}
+		return this.next()
+	},
+
+	add(value, key, output){
+		output[key] = value
+		return this.next()
+	},
+
+	async go(url, data){
+		await this.next(null, url, data)
 		return this.next()
 	}
 }

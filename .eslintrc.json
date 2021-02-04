@@ -4,13 +4,17 @@
         "es2021": true
     },
 	"plugins": [
-		"jsdoc",
-		"json"
 	],
-    "extends": ["eslint:recommended", "plugin:jsdoc/recommended", "plugin:json/recommended"],
+    "extends": ["eslint:recommended"],
     "parserOptions": {
         "ecmaVersion": 12
     },
+	"globals": {
+		"__": false,
+		"pico": false,
+		"inherit": false,
+		"define": false
+	},
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-newline": "error",
@@ -173,7 +177,6 @@
         "no-script-url": "error",
         "no-self-compare": "error",
         "no-sequences": "error",
-        "no-shadow": "error",
         "no-spaced-func": "error",
         "no-sync": "error",
         "no-tabs": [
@@ -248,7 +251,7 @@
             "single"
         ],
         "radix": "error",
-        "require-atomic-updates": "error",
+        "require-atomic-updates": "warn",
         "require-await": "error",
         "require-jsdoc": "off",
         "require-unicode-regexp": "error",

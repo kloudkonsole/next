@@ -1,10 +1,8 @@
 {
 	"rsc": {
-		"users": {
+		"user": {
 			"meta": {
 			},
-			"seed": [
-			],
 			"schema": {
 				"type": "object",
 				"spec": {

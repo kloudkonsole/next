@@ -1,0 +1,102 @@
+{
+	"rsc": {
+		"so": {
+			"meta": {
+			},
+			"ref": {
+				"org": "org",
+				"send_by": "user",
+				"receive_by": "user",
+				"carrier": "carrier"
+			},
+			"child": ["so_line"],
+			"schema": {
+				"type": "object",
+				"required": 1,
+				"notnull": 1,
+				"spec": {
+					"id": {
+						"type": "string",
+						"gt": 8,
+						"lt": 16
+					},
+					"ref": {
+						"type": "string",
+						"gt": 4,
+						"lt": 32
+					},
+					"state": {
+						"type": ["CAN", "CFM", "PAR", "COM"]
+					},
+					"own_by": {
+						"type": "number"
+					},
+					"send_by": {
+						"type": "number"
+					},
+					"receive_by": {
+						"type": "number",
+						"required": 1
+					},
+					"ship_at": {
+						"type": "date",
+						"required": 1
+					},
+					"delivery_method": {
+						"type": ["BOX", "HOM"],
+						"required": 1
+					},
+					"carrier": {
+						"type": "number",
+						"required": 1
+					},
+					"address": {
+						"type": "array",
+						"gt": 0,
+						"lt": 5,
+						"spec": "string"
+					},
+					"so_line": {
+						"type": "array",
+						"required": 1,
+						"notnull": 1,
+						"gt": 0,
+						"lt": 16,
+						"spec": ["ref", ["_", "so_line"]]
+					}
+				}
+			}
+		},
+		"so_line": {
+			"ref": {
+				"so": "so",
+				"sku": "sku"
+			},
+			"schema": {
+				"type": "object",
+				"required": 1,
+				"notnull": 1,
+				"spec": {
+					"so": {
+						"type": "number",
+						"required": 1
+					},
+					"sku": {
+						"type": "number"
+					},
+					"line": {
+						"type": "number",
+						"required": 1,
+						"gt": 0
+					},
+					"orderred": {
+						"type": "number"
+					},
+					"shippped": {
+						"type": "number"
+					}
+				}
+			}
+		}
+	}
+}

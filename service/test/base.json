@@ -1,0 +1,28 @@
+{
+	"mod": [{
+		"id": "cms_cli",
+		"mod": "ajax",
+		"host": "127.0.0.1",
+		"port": 1337
+	},{
+		"id": "util",
+		"mod": "util"
+	},{
+		"id": "it",
+		"mod": "it"
+	}],
+	"spec": {
+	},
+	"routes": {
+		"": [
+			[["cms_cli.poll", "GET", "http://localhost:1337/1.0/health"]],
+			["util.go", "/inbounds/products"]
+		],
+		"/inbounds/products": [
+			["it.parallel", "Products Listing Tests", "@.func.list"]
+		],
+		"fetch/so": [
+			[["cms_cli.query", "GET", "http://localhost:1337/1.0/so"], "_.params", "_.opt", "_.output"]
+		]
+	}
+} 

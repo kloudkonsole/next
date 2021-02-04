@@ -1,0 +1,37 @@
+{
+	"mod": [{
+		"id": "web",
+		"mod": "web",
+		"host": "0.0.0.0",
+		"port": 1337
+	},{
+		"id": "db",
+		"mod": "json_mem",
+		"meta": {
+			"type": "object",
+			"spec": {
+				"i": "number",
+				"s": "number",
+				"cat": "number",
+				"uat": "date",
+				"cby": "number",
+				"uby": "date"
+			}
+		}
+	},{
+		"id": "timer",
+		"mod": "timer"
+	},{
+		"id": "util",
+		"mod": "util"
+	}],
+	"spec": {
+	},
+	"routes": {
+		"": [
+			["util.add", "@.rsc.so_line.schema", "so_line", "_.ext"],
+			["util.spawn", "@.rsc.so.schema", "_.ext", 10, "_.:so"],
+			["db.set", "so", null, "_.:so", "_.:output"]
+		]
+	}
+} 
