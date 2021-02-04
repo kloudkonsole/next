@@ -23,7 +23,7 @@ jobs:
         npm run lint
       env:
         CI: true
-    - name: Bootup
-      run: |
-        npm ci
-        npm start
+    - name: Build the stack
+      run: docker-compose up -d
+    - name: Check running containers
+      run: docker ps
