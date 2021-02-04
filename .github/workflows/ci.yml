@@ -23,3 +23,7 @@ jobs:
         npm run lint
       env:
         CI: true
+    - name: Bootup
+      run: |
+        npm ci
+        npm start
