@@ -23,6 +23,8 @@ jobs:
         npm run lint
       env:
         CI: true
+    - name: Get directory
+      run: ls -lta
     - name: Build the stack
       run: docker-compose up -d
     - name: Check running containers

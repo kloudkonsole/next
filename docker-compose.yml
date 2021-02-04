@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  stub:
+    container_name: 
+    image: node:14-alpine
+    environment:
+      NODE_ENV: dev
+      NODE_APP: ses
+      PORT: 3000
+    volumes:
+      - .:/opt/stub
+    working_dir: /opt/stub
+    ports:
+      - "1337:1337"
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - service-network
+    restart: unless-stopped
+    command: ["npm", "run", "start"]
+
+networks:
+  service-network:
+    driver: bridge
