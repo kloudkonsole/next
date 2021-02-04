@@ -23,9 +23,9 @@ jobs:
         npm run lint
       env:
         CI: true
-    - name: Get directory
-      run: ls -lta
+    - name: npm ci
+      run: npm ci
     - name: Build the stack
       run: docker-compose up -d
-    - name: Check running containers
-      run: curl --location --request GET 'localhost:1337/1.0/so/1'
+    - name: test
+      run: npm test
