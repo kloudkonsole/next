@@ -1,32 +1,25 @@
-name: stub CI
+name: Checks
 
 on: [push]
 
 jobs:
-  checks:
+  build:
+
     runs-on: ubuntu-latest
-    timeout-minutes: 10
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [12.x, 14.x, 15.x]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
     - name: Lint
       run: |
-        npm i -g eslint eslint-plugin-json eslint-plugin-jsdoc
+        npm i -g eslint
         npm run lint
-    - name: Bootup
-      run: |
-        npm ci
-        npm start
-    - name: Test
-      run: |
-        npm test
       env:
         CI: true
