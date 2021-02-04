@@ -18,7 +18,7 @@ module.exports = {
 			}
 		})
 
-		proxy.listen(cfg.port, cfg.host, () => { })
+		proxy.listen(cfg.port, cfg.host, () => console.log(`listening to ${cfg.host}:${cfg.port}`))
 	},
 
 	bodyParser(req, body){

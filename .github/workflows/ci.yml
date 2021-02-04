@@ -28,4 +28,4 @@ jobs:
     - name: Build the stack
       run: docker-compose up -d
     - name: Check running containers
-      run: docker ps
+      run: curl --location --request GET 'localhost:1337/1.0/so/1'
