@@ -2,7 +2,7 @@ version: '3'
 
 services:
   stub:
-    container_name: 
+    container_name: stub
     image: node:14-alpine
     environment:
       NODE_ENV: dev
