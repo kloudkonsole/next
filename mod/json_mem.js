@@ -51,7 +51,7 @@ Collection.prototype = {
 			cby: 0,
 			cat: new Date
 		}
-		const d = {}
+		const d = {} // TODO: add ext dependencies based on this.map?
 		const res = pObj.validate(this.schema, input, d)
 		if (res) throw `invalid parameter: ${res}`
 

@@ -62,7 +62,7 @@
 						"notnull": 1,
 						"gt": 0,
 						"lt": 16,
-						"spec": ["ref", ["_", "so_line"]]
+						"spec": ["ref", ["_", "so_line_schema"]]
 					}
 				}
 			}

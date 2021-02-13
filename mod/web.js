@@ -18,7 +18,7 @@ module.exports = {
 			}
 		})
 
-		proxy.listen(cfg.port, cfg.host, () => process.stdout.write(`listening to ${cfg.host}:${cfg.port}`))
+		proxy.listen(cfg.port, cfg.host, () => process.stdout.write(`listening to ${cfg.host}:${cfg.port}\n`))
 	},
 
 	bodyParser(req, body){

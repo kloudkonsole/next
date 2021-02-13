@@ -18,10 +18,6 @@
 						"gt": 4,
 						"lt": 32
 					},
-					"member": {
-						"type": "array",
-						"spec": ["ref", ["_", "user"]]
-					},
 					"state": {
 						"type": [0, 1]
 					}
@@ -50,7 +46,9 @@
 						"type": [0, 1]
 					},
 					"org": {
-						"type": "number"
+						"type": "number",
+						"gt": 0,
+						"lt": 2
 					}
 				}
 			}
@@ -79,9 +77,6 @@
 			}
 		},
 		"delivery_method": {
-			"map": {
-				"delivery_method": "delivery_method"
-			},
 			"schema": {
 				"type": "object",
 				"required": 1,

@@ -29,7 +29,14 @@
 	},
 	"routes": {
 		"": [
-			["util.add", "@.rsc.so_line.schema", "so_line", "_.ext"],
+			["util.spawn", "@.rsc.org.schema", "_.ext", 3, "_.:org"],
+			["db.set", "org", null, "_.:org", "_.:output"],
+			["util.add", "_.:org", "org", "_.ext"],
+
+			["util.spawn", "@.rsc.sku.schema", "_.ext", 10, "_.:sku"],
+			["db.set", "sku", null, "_.:sku", "_.:output"],
+
+			["util.add", "@.rsc.so_line.schema", "so_line_schema", "_.ext"],
 			["util.spawn", "@.rsc.so.schema", "_.ext", 10, "_.:so"],
 			["db.set", "so", null, "_.:so", "_.:output"]
 		]

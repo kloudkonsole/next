@@ -2,5 +2,6 @@
 	"base.json",
 	"../common.json",
 	"../ums.json",
+	"../sku.json",
 	"../so.json"
 ]
