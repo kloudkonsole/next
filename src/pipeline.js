@@ -98,9 +98,9 @@ module.exports = {
 		const paths = Object.keys(service.routes)
 		const host = _host(radix, libs, routes)
 
-		service.mod.forEach(cfg => {
-			const id = cfg.id
+		Object.keys(service.mod).forEach(id => {
 			if (!id || KEYWORDS.includes(id)) throw `invalid id [${id}]`
+			const cfg = service.mod[id]
 			const mod = require(`../mod/${cfg.mod}`)
 			Object.assign(libs, {[id]: mod.setup(host, cfg, service.rsc, paths)})
 			mods[id] = mod

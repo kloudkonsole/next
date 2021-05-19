@@ -156,7 +156,7 @@ function getColl(ctx, dbName, collName){
 
 module.exports = {
 	setup(host, cfg, rsc, paths){
-		KEY = cfg.id
+		KEY = cfg.name
 		const meta = cfg.meta
 		return Object.keys(rsc).reduce((acc, name) => {
 			const rs = rsc[name]

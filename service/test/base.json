@@ -1,16 +1,17 @@
 {
-	"mod": [{
-		"id": "cms_cli",
-		"mod": "ajax",
-		"host": "127.0.0.1",
-		"port": 1337
-	},{
-		"id": "util",
-		"mod": "util"
-	},{
-		"id": "it",
-		"mod": "it"
-	}],
+	"mod": {
+		"cms_cli": {
+			"mod": "ajax",
+			"host": "127.0.0.1",
+			"port": 1337
+		},
+		"util": {
+			"mod": "util"
+		},
+		"it": {
+			"mod": "it"
+		}
+	},
 	"spec": {
 	},
 	"routes": {

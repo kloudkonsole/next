@@ -2,5 +2,6 @@
 	"base.json",
 	"../common.json",
 	"../ums.json",
-	"../so.json"
+	"../so.json",
+	"../pay.json"
 ]

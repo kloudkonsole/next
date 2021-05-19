@@ -1,3 +1,4 @@
+const path = require('path')
 const pico = require('pico-common')
 const psUtil = require('picos-util')
 const args = require('pico-args')
@@ -16,9 +17,10 @@ pico.run({
 	name: opt.name,
 	ajax: psUtil.ajax,
 	paths: {
-		'@': `${opt.dir + opt.service}/`
+		'@': `${path.join(opt.dir, opt.service, '/')}`
 	},
 	env: {
+		build: process.env.NODE_ENV,
 		pipeline
 	},
 	preprocessors: {

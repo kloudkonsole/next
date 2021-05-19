@@ -1,0 +1,20 @@
+{
+	"mod": {
+		"stripe": {
+			"mod": "stripe",
+			"secret": "sk_test_4u5w10lSdkdpS82HtjqvcCQb"
+		}
+	},
+	"rsc": {
+		"pay": {
+			"meta": {
+			},
+			"schema": {
+				"type": "object",
+				"spec": {
+					"product_id": "string"
+				}
+			}
+		}
+	}
+} 

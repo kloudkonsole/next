@@ -94,6 +94,11 @@
 			[["web.output"], "_.res", "_.output", "_.meta"],
 			["util.input2", "$.params", "@.spec.params", "_.params"],
 			[["web.router", "@.rsc"], "_.req.method", "_.params"]
+		],
+		"/1.0/stripe/session": [
+			[["web.output"], "_.res", "_.output", "_.meta"],
+			["util.input2", "$.params", "@.spec.params", "_.params"],
+			["stripe.createSession", {}, {}, "_.output"]
 		]
 	}
 } 

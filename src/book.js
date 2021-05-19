@@ -72,8 +72,8 @@ function readPages(wd, fnames, list, cb){
 function readBook(wd, index, cb){
 	readPages(wd, [index], [], (err, res) => {
 		if (err) return cb(err)
-		if (!res.length) return cb(`not found: ${index}`)
-		readPages(wd, res[0], [], cb)
+		if (!res.length || !Array.isArray(res[0])) return cb(`not found: ${index}`)
+		readPages(wd, res[0].concat(`${process.env.NODE_ENV || 'dev'}.json`), [], cb)
 	})
 }
 

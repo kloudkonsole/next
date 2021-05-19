@@ -1,30 +1,32 @@
 {
-	"mod": [{
-		"id": "web",
-		"mod": "web",
-		"host": "0.0.0.0",
-		"port": 1337
-	},{
-		"id": "db",
-		"mod": "json_mem",
-		"meta": {
-			"type": "object",
-			"spec": {
-				"i": "number",
-				"s": "number",
-				"cat": "number",
-				"uat": "date",
-				"cby": "number",
-				"uby": "date"
+	"mod": {
+		"web": {
+			"mod": "web",
+			"host": "0.0.0.0",
+			"port": 1337
+		},
+		"db": {
+			"mod": "json_mem",
+			"name": "db",
+			"meta": {
+				"type": "object",
+				"spec": {
+					"i": "number",
+					"s": "number",
+					"cat": "number",
+					"uat": "date",
+					"cby": "number",
+					"uby": "date"
+				}
 			}
+		},
+		"timer": {
+			"mod": "timer"
+		},
+		"util": {
+			"mod": "util"
 		}
-	},{
-		"id": "timer",
-		"mod": "timer"
-	},{
-		"id": "util",
-		"mod": "util"
-	}],
+	},
 	"spec": {
 	},
 	"routes": {
