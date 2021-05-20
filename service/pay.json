@@ -3,7 +3,7 @@
 		"stripe": {
 			"mod": "stripe",
 			"secret": "sk_test_4u5w10lSdkdpS82HtjqvcCQb",
-			"domain": "http://localhost:30000"
+			"domain": "http://localhost:3000"
 		}
 	},
 	"rsc": {

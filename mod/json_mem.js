@@ -1,5 +1,4 @@
 const pObj = require('pico-common').export('pico/obj')
-let KEY
 
 /**
  * Database class
@@ -141,21 +140,19 @@ function sets(coll, ids, inputs, outputs){
 /**
  * Get Collection by database name and collection name
  *
- * @param {object} ctx - context object
- * @param {string} dbName - name of database that contain the interested collection
+ * @param {string} db - database that contain the interested collection
  * @param {string} collName - name of the collection
  *
  * @returns {Collection} - Collection instance
  */
-function getColl(db, dbName, collName){
+function getColl(db, collName){
 	const coll = db.getColl(collName)
-	if (!coll) throw `Invalid ${dbName} ${collName}`
+	if (!coll) throw `Invalid ${collName}`
 	return coll
 }
 
 module.exports = {
 	setup(host, cfg, rsc, paths){
-		KEY = cfg.name
 		const meta = cfg.meta
 		return Object.keys(rsc).reduce((acc, name) => {
 			const rs = rsc[name]
@@ -165,7 +162,7 @@ module.exports = {
 		}, new Database(host))
 	},
 	set(name, id, input, output){
-		const coll = getColl(this.ctx, KEY, name)
+		const coll = getColl(this.ctx, name)
 		if (Array.isArray(input)){
 			sets(coll, id, input, output)
 		}else{
@@ -174,18 +171,18 @@ module.exports = {
 		return this.next()
 	},
 	get(name, id, output){
-		const coll = getColl(this.ctx, KEY, name)
+		const coll = getColl(this.ctx, name)
 		const res = coll.select({index: 'i', csv: [id]})
 		Object.assign(output, res[0])
 		return this.next()
 	},
 	find(name, query, output){
-		const coll = getColl(this.ctx, KEY, name)
+		const coll = getColl(this.ctx, name)
 		output.push(...coll.select(query))
 		return this.next()
 	},
 	hide(name, id){
-		const coll = getColl(this.ctx, KEY, name)
+		const coll = getColl(this.ctx, name)
 		coll.remove(id)
 		return this.next()
 	}

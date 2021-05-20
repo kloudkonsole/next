@@ -7,7 +7,6 @@
 		},
 		"db": {
 			"mod": "json_mem",
-			"name": "db",
 			"meta": {
 				"type": "object",
 				"spec": {
@@ -22,6 +21,9 @@
 		},
 		"timer": {
 			"mod": "timer"
+		},
+		"interval": {
+			"mod": "interval"
 		},
 		"util": {
 			"mod": "util"

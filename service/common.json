@@ -50,8 +50,11 @@
 		}
 	},
 	"routes": {
+		"125000": [
+			["util.log", "125 sec"]
+		],
 		"* * * * * *": [
-			["util.log", "1min"]
+			["util.log", "1 min"]
 		],
 		"POST/rsc": [
 			["web.bodyParser", "_.req", "_.input"],
