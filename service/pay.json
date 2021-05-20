@@ -2,7 +2,8 @@
 	"mod": {
 		"stripe": {
 			"mod": "stripe",
-			"secret": "sk_test_4u5w10lSdkdpS82HtjqvcCQb"
+			"secret": "sk_test_4u5w10lSdkdpS82HtjqvcCQb",
+			"domain": "http://localhost:30000"
 		}
 	},
 	"rsc": {

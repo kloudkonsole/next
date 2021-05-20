@@ -41,13 +41,13 @@ function _host(radix, libs, routes){
 			const key = radix.match(named, params)
 			const route = routes[key]
 			if (!route) return 'not found'
-			return next.call(Object.assign({}, libs, {params, next, route, data, ptr: 0}))
+			return next.call(Object.assign({}, {params, next, route, data, ptr: 0}))
 		}
 
 		const middleware = this.route[this.ptr++]
 		if (!middleware) return
 
-		const args = middleware.slice(1).map(key => {
+		const args = middleware.slice(2).map(key => {
 			if (!Array.isArray(key)) return key
 
 			let src
@@ -77,7 +77,7 @@ function _host(radix, libs, routes){
 			}
 			return arg
 		})
-		await middleware[0].apply(this, args)
+		await middleware[1].apply(Object.assign(this, {ctx: middleware[0]}), args)
 	}
 
 	return {
@@ -139,7 +139,7 @@ module.exports = {
 				const obj = pObj.dot(mods, arr)
 				if (!obj || !obj[mname]) throw `undefined method key:${key} path:${path}`
 				const func = obj[mname]
-				const route = []
+				const route = [pObj.dot(libs, arr)]
 				if (Array.isArray(method)){
 					route.push(func.apply(obj, params))
 				}else{

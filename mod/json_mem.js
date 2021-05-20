@@ -147,8 +147,7 @@ function sets(coll, ids, inputs, outputs){
  *
  * @returns {Collection} - Collection instance
  */
-function getColl(ctx, dbName, collName){
-	const db = ctx[dbName]
+function getColl(db, dbName, collName){
 	const coll = db.getColl(collName)
 	if (!coll) throw `Invalid ${dbName} ${collName}`
 	return coll
@@ -166,7 +165,7 @@ module.exports = {
 		}, new Database(host))
 	},
 	set(name, id, input, output){
-		const coll = getColl(this, KEY, name)
+		const coll = getColl(this.ctx, KEY, name)
 		if (Array.isArray(input)){
 			sets(coll, id, input, output)
 		}else{
@@ -175,18 +174,18 @@ module.exports = {
 		return this.next()
 	},
 	get(name, id, output){
-		const coll = getColl(this, KEY, name)
+		const coll = getColl(this.ctx, KEY, name)
 		const res = coll.select({index: 'i', csv: [id]})
 		Object.assign(output, res[0])
 		return this.next()
 	},
 	find(name, query, output){
-		const coll = getColl(this, KEY, name)
+		const coll = getColl(this.ctx, KEY, name)
 		output.push(...coll.select(query))
 		return this.next()
 	},
 	hide(name, id){
-		const coll = getColl(this, KEY, name)
+		const coll = getColl(this.ctx, KEY, name)
 		coll.remove(id)
 		return this.next()
 	}
